@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
+import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Farejar from './pages/Farejar';
@@ -12,7 +13,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/farejar" element={<Farejar />} />
-        <Route path="/meu-pet" element={<MeuPet />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/meu-pet" element={<MeuPet />} />
+        </Route>
       </Route>
     </Routes>
   );
