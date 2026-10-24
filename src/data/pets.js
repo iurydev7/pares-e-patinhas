@@ -8,7 +8,7 @@ const pets = [
     },
     {
         id: 2,
-        nome: "Milo",
+        nome: "Vozão",
         especie: "Gato",
         idade: 1,
         imagem: "https://placecats.com/400/400"
