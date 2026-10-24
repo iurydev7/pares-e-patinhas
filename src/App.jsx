@@ -8,17 +8,16 @@ import MeuPet from './pages/MeuPet';
 
 function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/farejar" element={<Farejar />} />
-
-        <Route element={<ProtectedRoute />}>
-          <Route path="/meu-pet" element={<MeuPet />} />
-        </Route>
-      </Route>
-    </Routes>
+     <Routes>
+     <Route path="/login" element={<Login />} />
+     <Route element={<Layout />}>
+       <Route path="/" element={<Home />} />
+       <Route path="/farejar" element={<Farejar />} />
+       <Route element={<ProtectedRoute />}>
+         <Route path="/meu-pet" element={<MeuPet />} />
+       </Route>
+     </Route>
+   </Routes>
   );
 }
 
