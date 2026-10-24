@@ -1,7 +1,7 @@
 function Footer() {
   return (
     <footer className="bg-dark text-white text-center py-3">
-      <small>© TelaViva</small>
+      <small>© Pares & Patinhas</small>
     </footer>
   )
 }

@@ -1,10 +1,10 @@
-function Admin() {
+function Farejar() {
   return (
     <div>
-      <h1>Admin</h1>
+      <h1>Farejar</h1>
       <p>Página em construção.</p>
     </div>
-  )
+  );
 }
 
-export default Admin
+export default Farejar;
