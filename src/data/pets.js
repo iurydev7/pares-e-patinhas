@@ -1,10 +1,10 @@
 const pets = [
     {
         id: 1,
-        nome: "Luna",
+        nome: "Ice Maria",
         especie: "Cachorro",
-        idade: 2,
-        imagem: "https://placedog.net/400/400?id=1"
+        idade: 3,
+        imagem: "/images/ice_maria.png"
     },
     {
         id: 2,
@@ -19,6 +19,13 @@ const pets = [
         especie: "Cachorro",
         idade: 3,
         imagem: "https://placedog.net/400/400?id=2"
+    },
+     {
+        id: 4,
+        nome: "Luna",
+        especie: "Cachorro",
+        idade: 2,
+        imagem: "https://placedog.net/400/400?id=1"
     }
 ];
 
