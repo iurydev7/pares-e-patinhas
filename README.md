@@ -1,12 +1,12 @@
-# TelaViva
+# Pares & Patinhas
 
-front-end do TelaViva: anúncios em tablets de carros de aplicativo.
+front-end do Pares&Patinhas: matches para o seu pet.
 Stack: React + Vite (JavaScript), Bootstrap, React Router.
 
 ## bash
 
 git clone <URL-DO-REPOSITORIO>
-cd telaviva
+cd pares-e-patinhas
 npm install
 npm run dev
 
@@ -20,11 +20,12 @@ npm run dev
 
 ## Responsáveis
 
-| NOME | Header, Footer e Layout | feat/layout | components/layout/ |
-| NOME | Login e rota protegida | feat/login | pages/Login.jsx |
-| NOME | Home e carrossel | feat/home-carrossel | pages/Home.jsx |
-| NOME | Interface do anunciante | feat/anunciante | pages/Anunciante.jsx |
-| NOME | Admin (banners e vídeos) | feat/admin-midias | pages/Admin.jsx |
-| NOME | Páginas institucionais | feat/institucional | pages/Institucional.jsx |
+| NOME | Identidade visual (cores, fontes, botões, tags) | `feat/identidade` | `index.css`, `App.css` |
+| NOME | Header, Footer e Layout | `feat/layout` | `components/layout/` |
+| Iury | Login e rota protegida | `feat/login` | `pages/Login.jsx`, `components/ProtectedRoute.jsx` |
+| NOME | Dados mockados e card do pet | `feat/dados-mock` | `data/`, `components/PetCard.jsx` |
+| NOME | Home e carrossel | `feat/home-carrossel` | `pages/Home.jsx`, `components/Carousel.jsx` |
+| NOME | Farejar (match) | `feat/farejar` | `pages/Farejar.jsx` |
+| NOME | Meu pet (perfil) | `feat/meu-pet` | `pages/MeuPet.jsx` |
 
 ## Cada um mexe só nos arquivos da sua parte.

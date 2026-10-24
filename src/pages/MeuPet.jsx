@@ -1,10 +1,10 @@
-function Anunciante() {
+function MeuPet() {
   return (
     <div>
-      <h1>Anunciante</h1>
+      <h1>Meu Pet</h1>
       <p>Página em construção.</p>
     </div>
   )
 }
 
-export default Anunciante
+export default MeuPet;

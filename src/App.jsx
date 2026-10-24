@@ -1,10 +1,9 @@
-import { Routes, Route } from 'react-router-dom'
-import Layout from './components/layout/Layout'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Anunciante from './pages/Anunciante'
-import Admin from './pages/Admin'
-import Institucional from './pages/Institucional'
+import { Routes, Route } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Farejar from './pages/Farejar';
+import MeuPet from './pages/MeuPet';
 
 function App() {
   return (
@@ -12,12 +11,11 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/anunciante" element={<Anunciante />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/institucional" element={<Institucional />} />
+        <Route path="/farejar" element={<Farejar />} />
+        <Route path="/meu-pet" element={<MeuPet />} />
       </Route>
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
