@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import LoginHero from '../components/login/LoginHero'
 import LoginForm from '../components/login/LoginForm'
+import '../components/login/login.css'
 
 function Login() {
   const { login } = useAuth()
