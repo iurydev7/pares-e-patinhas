@@ -1,3 +1,5 @@
+import "./PetCard.css";
+
 function PetCard({ pet, onCurtir, onPassar }) {
     return (
         <div className="pet-card">
