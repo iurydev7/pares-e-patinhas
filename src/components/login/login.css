@@ -1,0 +1,321 @@
+/* PROVISÓRIO: fontes do PDF (Bricolage Grotesque e Figtree).
+   Remover esta linha quando a identidade visual carregar as fontes. */
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Figtree:wght@400;600;700&display=swap');
+
+/* ==========================================================================
+   Tela de login: baseada no protótipo do PDF de identidade visual (pág. 5).
+
+   Os valores de cor, fonte e raio vêm dos tokens do PDF (--ameixa, --goiaba...).
+   Se os tokens ainda não existirem no projeto, o valor depois da vírgula
+   (o "reserva") é usado. Quando a identidade visual for mesclada, os
+   reservas podem ser removidos.
+   ========================================================================== */
+
+.login-page {
+  --lp-ameixa: var(--ameixa, #2A1540);
+  --lp-goiaba: var(--goiaba, #D63A5C);
+  --lp-manteiga: var(--manteiga, #FFD25E);
+  --lp-lavanda: var(--lavanda, #E9DDF7);
+  --lp-nevoa: var(--nevoa, #FAF5FF);
+  --lp-texto-suave: var(--texto-suave, #5B4A6E);
+  --lp-fonte-titulo: var(--fonte-titulo, 'Bricolage Grotesque', sans-serif);
+  --lp-fonte-texto: var(--fonte-texto, 'Figtree', system-ui, sans-serif);
+  --lp-raio-card: var(--raio-card, 28px);
+  --lp-raio-botao: var(--raio-botao, 999px);
+  /* Rosa claro do cartão: aparece no protótipo, mas não está nos tokens */
+  --lp-rosa-claro: #F9C7D2;
+
+  display: grid;
+  grid-template-columns: 21fr 19fr;
+  min-height: 100vh;
+  background: var(--lp-nevoa);
+  color: var(--lp-ameixa);
+  font-family: var(--lp-fonte-texto);
+}
+
+/* ---------- Painel esquerdo: marca ---------- */
+
+.login-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 42px;
+  background: var(--lp-ameixa);
+  color: #fff;
+  overflow: hidden;
+}
+
+.login-hero__marca {
+  position: absolute;
+  top: 36px;
+  left: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--lp-fonte-titulo);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.login-hero__logo {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 22px;
+}
+
+.login-hero__logo::before,
+.login-hero__logo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.login-hero__logo::before {
+  left: 0;
+  background: #fff;
+}
+
+.login-hero__logo::after {
+  left: 12px;
+  background: var(--lp-goiaba);
+  opacity: 0.95;
+}
+
+.login-hero__e {
+  color: var(--lp-manteiga);
+}
+
+.login-hero__cartoes {
+  position: relative;
+  width: 260px;
+  height: 190px;
+  margin-bottom: 4px;
+}
+
+.login-hero__cartao {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 152px;
+  border-radius: var(--lp-raio-card);
+  color: var(--lp-ameixa);
+}
+
+.login-hero__cartao--amarelo {
+  top: 10px;
+  left: 0;
+  background: var(--lp-manteiga);
+  transform: rotate(-8deg);
+}
+
+.login-hero__cartao--rosa {
+  top: 28px;
+  left: 90px;
+  background: var(--lp-rosa-claro);
+  transform: rotate(6deg);
+}
+
+.login-hero__pata {
+  width: 54px;
+  height: 54px;
+}
+
+.login-hero__titulo {
+  max-width: 320px;
+  margin: 0 0 14px;
+  font-family: var(--lp-fonte-titulo);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.login-hero__texto {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+/* ---------- Painel direito: formulário ---------- */
+
+.login-form {
+  width: min(300px, calc(100% - 48px));
+  margin: auto;
+  padding: 32px 0;
+}
+
+.login-form__titulo {
+  margin: 0 0 6px;
+  font-family: var(--lp-fonte-titulo);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--lp-ameixa);
+}
+
+.login-form__subtitulo {
+  margin: 0 0 22px;
+  font-size: 13px;
+  color: var(--lp-texto-suave);
+}
+
+.form-field {
+  margin-bottom: 14px;
+}
+
+.form-field__label {
+  display: block;
+  margin: 0 0 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lp-ameixa);
+}
+
+.form-field__input {
+  width: 100%;
+  height: 39px;
+  padding: 0 14px;
+  border: 1.5px solid var(--lp-lavanda);
+  border-radius: 14px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--lp-ameixa);
+}
+
+.form-field__input::placeholder {
+  color: #8d8397;
+}
+
+.form-field__input:focus {
+  outline: none;
+  border-color: var(--lp-goiaba);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lp-goiaba) 20%, transparent);
+}
+
+.login-form__erro {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lp-goiaba);
+}
+
+.login-form__botao {
+  width: 100%;
+  height: 41px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: var(--lp-raio-botao);
+  background: var(--lp-goiaba);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+
+.login-form__botao:hover:not(:disabled) {
+  filter: brightness(0.93);
+}
+
+.login-form__botao:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--lp-goiaba) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.login-form__botao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ---------- Telas estreitas: painéis empilhados ---------- */
+
+@media (max-width: 800px) {
+  .login-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .login-hero {
+    justify-content: flex-start;
+    padding: 28px 24px 32px;
+  }
+
+  .login-hero__marca {
+    position: static;
+    margin-bottom: 24px;
+  }
+
+  .login-hero__cartoes {
+    display: none;
+  }
+
+  .login-hero__titulo {
+    font-size: 26px;
+  }
+
+  .login-form {
+    padding: 32px 0 40px;
+  }
+}
+
+/* ---------- Abas "Entrar" / "Criar conta" ---------- */
+
+.login-painel {
+  width: min(300px, calc(100% - 48px));
+  margin: auto;
+  padding: 32px 0;
+}
+
+/* O formulário agora fica dentro do painel, que já define a largura */
+.login-painel .login-form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.login-abas {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+  padding: 4px;
+  border-radius: var(--lp-raio-botao);
+  background: var(--lp-lavanda);
+}
+
+.login-aba {
+  flex: 1;
+  height: 34px;
+  border: 0;
+  border-radius: var(--lp-raio-botao);
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lp-texto-suave);
+  cursor: pointer;
+}
+
+.login-aba--ativa {
+  background: #fff;
+  color: var(--lp-ameixa);
+}
+
+.login-aba:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--lp-goiaba) 35%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .login-painel {
+    padding: 32px 0 40px;
+  }
+}

@@ -1,0 +1,6 @@
+.pet-card img {
+    width: 350px;
+    height: 350px;
+    object-fit: contain;
+    margin-left: -45px;
+}
