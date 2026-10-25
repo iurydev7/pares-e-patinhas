@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../context/useAuth'
 import LoginHero from '../components/login/LoginHero'
-import LoginForm from '../components/login/LoginForm'
+import AuthTabs from '../components/login/AuthTabs'
 import '../components/login/login.css'
 
 function Login() {
-  const { login } = useAuth()
+  const { login, cadastrar } = useAuth()
   const navigate = useNavigate()
 
   function irParaMeuPet() {
@@ -15,7 +15,11 @@ function Login() {
   return (
     <div className="login-page">
       <LoginHero />
-      <LoginForm onLogin={login} onSucesso={irParaMeuPet} />
+      <AuthTabs
+        onLogin={login}
+        onCadastrar={cadastrar}
+        onSucesso={irParaMeuPet}
+      />
     </div>
   )
 }

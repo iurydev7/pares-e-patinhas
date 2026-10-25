@@ -266,3 +266,56 @@
     padding: 32px 0 40px;
   }
 }
+
+/* ---------- Abas "Entrar" / "Criar conta" ---------- */
+
+.login-painel {
+  width: min(300px, calc(100% - 48px));
+  margin: auto;
+  padding: 32px 0;
+}
+
+/* O formulário agora fica dentro do painel, que já define a largura */
+.login-painel .login-form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.login-abas {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+  padding: 4px;
+  border-radius: var(--lp-raio-botao);
+  background: var(--lp-lavanda);
+}
+
+.login-aba {
+  flex: 1;
+  height: 34px;
+  border: 0;
+  border-radius: var(--lp-raio-botao);
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lp-texto-suave);
+  cursor: pointer;
+}
+
+.login-aba--ativa {
+  background: #fff;
+  color: var(--lp-ameixa);
+}
+
+.login-aba:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--lp-goiaba) 35%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .login-painel {
+    padding: 32px 0 40px;
+  }
+}
