@@ -31,7 +31,7 @@ const hero = [
 
 function CarouselHero() {
   return (
-    <Carousel>
+    <Carousel className='hero-carousel'>
 
       {hero.map((hero) => (
         <Carousel.Item key={hero.title}>
