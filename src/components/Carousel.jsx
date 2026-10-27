@@ -1,5 +1,6 @@
-import { Carousel } from "react-bootstrap";
 import'./Carousel.css'
+import { Link } from "react-router-dom";
+import { Carousel } from "react-bootstrap";
 import imgHero from'../assets/img_hero.png'
 import img3Hero from '../assets/img03_hero.png'
 import img2Hero from '../assets/img02_hero.png'
@@ -11,7 +12,8 @@ const hero = [
     title : "Todo pet merece um par",
     description: "Crie o perfil do seu pet e comece a farejar.",
     button: {
-      text: "Criar perfil do pet"
+      text: "Criar perfil do pet",
+      url: "/meu-pet"
     },
 
   },
@@ -40,9 +42,9 @@ function CarouselHero() {
             <p>{hero.description}</p>
             
             {hero.button && (
-            <a href={hero.button.url} className="hero_carousel__link">
+            <Link href={hero.button.url} className="hero_carousel__link">
               {hero.button.text}
-            </a>
+            </Link>
           )}
           </Carousel.Caption>
         </Carousel.Item>
