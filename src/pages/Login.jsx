@@ -1,24 +1,38 @@
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/useAuth'
 import LoginHero from '../components/login/LoginHero'
 import AuthTabs from '../components/login/AuthTabs'
 import '../components/login/login.css'
 
 function Login() {
-  const { login, cadastrar } = useAuth()
+  const { user, login, cadastrar } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
-  function irParaMeuPet() {
-    navigate('/meu-pet', { replace: true })
-  }
+  const origem = location.state?.from
+
+  const destino = 
+    origem?.pathname === '/farejar' ||
+    origem?.pathname === '/meu-pet' 
+      ? origem.pathname + (origem.search || '')
+      : '/meu-pet'
+
+function redirecionarAposLogin() {
+  navigate(destino, {replace: true})
+}
+
+if (user) {
+  return <Navigate to={destino} replace />
+}
 
   return (
     <div className="login-page">
       <LoginHero />
+
       <AuthTabs
         onLogin={login}
         onCadastrar={cadastrar}
-        onSucesso={irParaMeuPet}
+        onSucesso={redirecionarAposLogin}
       />
     </div>
   )

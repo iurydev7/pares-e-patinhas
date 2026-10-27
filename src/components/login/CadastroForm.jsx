@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import FormField from './FormField'
 
+
 function CadastroForm({ onCadastrar, onSucesso }) {
   const [nome, setNome] = useState('')
   const [email, setEmail] = useState('')
@@ -13,7 +14,6 @@ function CadastroForm({ onCadastrar, onSucesso }) {
     evento.preventDefault()
     setErro('')
 
-    // Validações no front, antes de chamar a API
     if (!nome.trim() || !email.trim() || !senha || !confirmar) {
       setErro('Preencha todos os campos.')
       return
