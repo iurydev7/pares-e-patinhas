@@ -1,0 +1,179 @@
+/* PAGINA PRINCIPAL */
+
+.cadastro-pet {
+  background-color: #faf8fc;
+  min-height: 100vh;
+}
+
+/* CONTAINER CENTRALIZADO */
+
+.cadastro-pet-conteudo {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* CABECALHO */
+
+.cadastro-pet-cabecalho {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.cadastro-pet-cabecalho h1 {
+  color: #28163c;
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.cadastro-pet-cabecalho p {
+  color: #6b6572;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* CARD DO FORMULARIO */
+
+.formulario-pet {
+  width: 100%;
+  background-color: #ffffff;
+
+  border: 1px solid #e5dce9;
+  border-radius: 18px;
+
+  padding: 35px;
+
+  box-shadow: 0 8px 25px rgba(40, 22, 60, 0.06);
+}
+
+/* TITULO DO FORMULARIO */
+
+.formulario-pet h2 {
+  color: #28163c;
+  font-size: 22px;
+
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5dce9;
+}
+
+/* LABELS */
+
+.formulario-pet .form-label {
+  color: #28163c;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* CAMPOS DO FORMULARIO */
+
+.formulario-pet .form-control,
+.formulario-pet .form-select {
+  background-color: #ffffff;
+
+  border: 1px solid #ded6e3;
+  border-radius: 10px;
+
+  padding: 12px;
+
+  color: #28163c;
+  font-size: 15px;
+}
+
+/* FOCO DOS CAMPOS */
+
+.formulario-pet .form-control:focus,
+.formulario-pet .form-select:focus {
+  border-color: #28a39b;
+
+  box-shadow: 0 0 0 3px rgba(40, 163, 155, 0.15);
+}
+
+/* TEXTAREA */
+
+.formulario-pet textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+/* RADIO BUTTON */
+
+.formulario-pet .form-check-input {
+  cursor: pointer;
+  border-color: #b8adbf;
+}
+
+.formulario-pet .form-check-input:checked {
+  background-color: #28a39b;
+  border-color: #28a39b;
+}
+
+.formulario-pet .form-check-input:focus {
+  border-color: #28a39b;
+
+  box-shadow: 0 0 0 3px rgba(40, 163, 155, 0.15);
+}
+
+.formulario-pet .form-check-label {
+  color: #28163c;
+  cursor: pointer;
+}
+
+/* AREA DO BOTAO */
+
+.cadastro-pet-acoes {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* BOTAO CADASTRAR */
+
+.btn-cadastrar-pet {
+  background-color: #28a39b;
+  color: #ffffff;
+
+  border: none;
+  border-radius: 10px;
+
+  padding: 13px 30px;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease;
+}
+
+/* EFEITO HOVER */
+
+.btn-cadastrar-pet:hover {
+  background-color: #21877f;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 768px) {
+  .cadastro-pet-cabecalho h1 {
+    font-size: 26px;
+  }
+
+  .cadastro-pet-cabecalho p {
+    font-size: 14px;
+  }
+
+  .formulario-pet {
+    padding: 22px;
+  }
+
+  .formulario-pet h2 {
+    font-size: 20px;
+  }
+
+  .cadastro-pet-acoes {
+    justify-content: center;
+  }
+
+  .btn-cadastrar-pet {
+    width: 100%;
+  }
+}
