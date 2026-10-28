@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import './Header.css';
 
@@ -59,12 +59,6 @@ export default function Header() {
             <span className="user-name">Entrar</span>
           </Link>
         )}
-    <nav className="navbar navbar-expand /*bg-dark navbar-dark*/ px-3">
-      <Link className="navbar-brand" to="/">Pares & Patinhas</Link>
-      <div className="navbar-nav">
-        <Link className="nav-link" to="/meu-pet">Meu Pet</Link>
-        <Link className="nav-link" to="/farejar">Farejar</Link>
-        <Link className="nav-link" to="/login">Login</Link>
       </div>
 
       {/* Modal de Confirmação com Patinhas nos Cantos */}
