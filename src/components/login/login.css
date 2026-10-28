@@ -1,15 +1,4 @@
-/* PROVISÓRIO: fontes do PDF (Bricolage Grotesque e Figtree).
-   Remover esta linha quando a identidade visual carregar as fontes. */
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Figtree:wght@400;600;700&display=swap');
-
-/* ==========================================================================
-   Tela de login: baseada no protótipo do PDF de identidade visual (pág. 5).
-
-   Os valores de cor, fonte e raio vêm dos tokens do PDF (--ameixa, --goiaba...).
-   Se os tokens ainda não existirem no projeto, o valor depois da vírgula
-   (o "reserva") é usado. Quando a identidade visual for mesclada, os
-   reservas podem ser removidos.
-   ========================================================================== */
 
 .login-page {
   --lp-ameixa: var(--ameixa, #2A1540);
@@ -22,7 +11,7 @@
   --lp-fonte-texto: var(--fonte-texto, 'Figtree', system-ui, sans-serif);
   --lp-raio-card: var(--raio-card, 28px);
   --lp-raio-botao: var(--raio-botao, 999px);
-  /* Rosa claro do cartão: aparece no protótipo, mas não está nos tokens */
+ 
   --lp-rosa-claro: #F9C7D2;
 
   display: grid;
@@ -32,8 +21,6 @@
   color: var(--lp-ameixa);
   font-family: var(--lp-fonte-texto);
 }
-
-/* ---------- Painel esquerdo: marca ---------- */
 
 .login-hero {
   position: relative;
@@ -57,6 +44,20 @@
   font-family: var(--lp-fonte-titulo);
   font-size: 15px;
   font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  color: #FFFFFF;
+  transition: opacity 0.2s ease;
+}
+.login-hero__marca:hover {
+  opacity: 0.8;
+}
+
+.login-hero__imagem {
+  width: 80px;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .login-hero__logo {
@@ -143,8 +144,6 @@
   line-height: 1.5;
   opacity: 0.85;
 }
-
-/* ---------- Painel direito: formulário ---------- */
 
 .login-form {
   width: min(300px, calc(100% - 48px));
@@ -236,46 +235,13 @@
   cursor: not-allowed;
 }
 
-/* ---------- Telas estreitas: painéis empilhados ---------- */
-
-@media (max-width: 800px) {
-  .login-page {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  .login-hero {
-    justify-content: flex-start;
-    padding: 28px 24px 32px;
-  }
-
-  .login-hero__marca {
-    position: static;
-    margin-bottom: 24px;
-  }
-
-  .login-hero__cartoes {
-    display: none;
-  }
-
-  .login-hero__titulo {
-    font-size: 26px;
-  }
-
-  .login-form {
-    padding: 32px 0 40px;
-  }
-}
-
-/* ---------- Abas "Entrar" / "Criar conta" ---------- */
-
 .login-painel {
   width: min(300px, calc(100% - 48px));
   margin: auto;
   padding: 32px 0;
 }
 
-/* O formulário agora fica dentro do painel, que já define a largura */
+
 .login-painel .login-form {
   width: 100%;
   margin: 0;
@@ -315,7 +281,76 @@
 }
 
 @media (max-width: 800px) {
+
+  .login-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: start;
+    min-height: 100vh;
+  }
+
+  .login-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 20px 28px;
+  }
+
+  .login-hero__marca {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 16px;
+  }
+
+  .login-hero__imagem {
+    width: 60px;
+    height: auto;
+  }
+
+  .login-hero__cartoes {
+    display: none;
+  }
+
+  .login-hero__titulo {
+    font-size: 22px;
+    max-width: 100%;
+    margin: 0 0 10px;
+  }
+
+  .login-hero__texto {
+    font-size: 12px;
+    margin: 0;
+  }
+
   .login-painel {
-    padding: 32px 0 40px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+    justify-self: center;
+    margin: 0;
+    padding: 28px 20px 40px;
+  }
+
+  .login-painel .login-form {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .login-abas {
+    width: 100%;
+  }
+
+  .form-field__input {
+    box-sizing: border-box;
+    width: 100%;
   }
 }
