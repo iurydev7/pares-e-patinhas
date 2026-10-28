@@ -1,9 +1,7 @@
-function Footer() {
+export default function Footer() {
   return (
-    <footer className="bg-body text-dark text-center py-3">
-      <small>© Pares & Patinhas</small>
+    <footer className="footer-container">
+      <p>© 2026 Pares & Patinhas. Todos os direitos reservados.</p>
     </footer>
-  )
+  );
 }
-
-export default Footer
