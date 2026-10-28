@@ -1,16 +1,36 @@
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import './Header.css';
 
-function Header() {
+export default function Header() {
   return (
-    <nav className="navbar navbar-expand /*bg-dark navbar-dark*/ px-3">
-      <Link className="navbar-brand" to="/">Pares & Patinhas</Link>
-      <div className="navbar-nav">
-        <Link className="nav-link" to="/meu-pet">Meu Pet</Link>
-        <Link className="nav-link" to="/farejar">Farejar</Link>
-        <Link className="nav-link" to="/login">Login</Link>
+    <header className="header-container">
+      {/* Logotipo e Badge */}
+      <div className="header-logo">
+        <Link to="/" className="logo-title">Pares & Patinhas</Link>
+        <span className="logo-badge">Todo pet merece um par</span>
       </div>
-    </nav>
-  )
-}
 
-export default Header
+      {/* Navegação Central */}
+      <nav className="header-nav">
+        <NavLink to="/" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+          Início
+        </NavLink>
+        <NavLink to="/farejar" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+          Farejar
+        </NavLink>
+        <NavLink to="/meu-pet" className={({ isActive }) => isActive ? 'nav-item active' : 'nav-item'}>
+          Meu pet
+        </NavLink>
+      </nav>
+
+      {/* Botão de Entrar */}
+      <div className="header-user">
+        <Link to="/login" className="user-profile">
+          <div className="avatar-placeholder">🐾</div>
+          <span className="user-name">Entrar</span>
+        </Link>
+      </div>
+    </header>
+  );
+}

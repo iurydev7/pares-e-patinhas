@@ -1,9 +1,10 @@
-function Footer() {
-  return (
-    <footer className="bg-body text-dark text-center py-3">
-      <small>© Pares & Patinhas</small>
-    </footer>
-  )
-}
+import React from 'react';
+import './Footer.css';
 
-export default Footer
+export default function Footer() {
+  return (
+    <footer className="footer-container">
+      <p>© 2026 Pares & Patinhas. Todos os direitos reservados.</p>
+    </footer>
+  );
+}
