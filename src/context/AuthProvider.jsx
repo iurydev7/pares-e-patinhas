@@ -4,7 +4,7 @@ import api from '../services/api'
 import { AuthContext } from './AuthContext'
 
 const CHAVE = 'pp_usuario'
-const TEMPO_SESSAO = 10 * 1000 
+const TEMPO_SESSAO = 30 * 30 * 1000 
 function lerUsuarioSalvo() {
   try {
     const salvo = localStorage.getItem(CHAVE)
