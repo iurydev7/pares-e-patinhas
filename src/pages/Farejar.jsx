@@ -1,48 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import pets from "../data/pets";
 import PetCard from "../components/PetCard";
+import './Farejar.css';
 
-const PETS_QUE_CURTIRAM = [3];
+const meuPetId = '1'
+const  macthId= ['5']
 
-export default function Farejar() {
-     const [indice, setIndice] = useState(0);
-     const [match, setMatch] = useState(null);
+function Farejar() {
+  const [fila, setFila] = useState(() =>
+    pets.filter((p) => String(p.id) !== meuPetId)
+  )
+  const [match, setMatch] = useState(null)
 
-     const pet = pets[indice];
-
-     function curtir() {
-    if (PETS_QUE_CURTIRAM.includes(pet.id)) {
-      setMatch(pet);
-    }
-    setIndice(indice + 1);
+  function decidir(tipo) {
+    const pet = fila[0]
+    if (!pet) return 
+      setFila((f) => f.slice(1))
+    if (tipo === 'curtir' && macthId.includes(String(pet.id)))
+      setMatch(pet)
   }
 
-  function passar() {
-    setIndice(indice + 1);
-  }
+const pet = fila[0]
 
-  return (
-    <main>
-      <h1>Farejar</h1>
-      <p>Um pet por vez. Dê uma patinha para quem você gostou.</p>
+return (
+  <div className="farejar">
+    <h1 className="farejar-titulo">Farejar</h1>
+    <p className="farejar-subtitulo">Um pet por vez. Dê uma patinha para quem você gostou.
+    </p>
+  <section className="farejar-centro">
+    {!pet ? (
+      <p className="farejar-vazio">Acabaram os pets!</p>
+    ) : (
+      <PetCard
+          pet={pet}
+          onCurtir={() => decidir('curtir')}
+          onPassar={() => decidir('passar')}
+      />
+    )}
+  </section>
 
-      {match && (
-        <div>
-          Patinhas dadas com {match.nome}!
-          <button onClick={() => setMatch(null)}>
-            Continuar
-          </button>
-        </div>
-      )}
-
-      {pet ? (
-        <PetCard pet={pet} onCurtir={curtir} onPassar={passar} />
-      ) : (
-        <div>
-          <p>Acabou as patinhas para se conectar!</p>
-        </div>
-      )}
-    </main>
-  );
+    {match && (
+      <div className="match-fundo">
+        <div className="match-caixa">
+          <h2>É um match!</h2>
+          <img src={match.imagem} alt={match.name} />
+            <p>Você e {match.name} se curtiram.</p>
+          <button className="match-botao" onClick={() => setMatch(null)}>Continuar fareajando</button>
+        </div>  
+      </div>
+    )}
+  </div>
+  )
 }
 
+export default Farejar
