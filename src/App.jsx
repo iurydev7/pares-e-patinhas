@@ -13,8 +13,8 @@ function App() {
 
      <Route element={<Layout />}>
        <Route path="/" element={<Home />} />
-        <Route path="/farejar" element={<Farejar />} />   
        <Route element={<ProtectedRoute />}>
+               <Route path="/farejar" element={<Farejar />} />   
         <Route path="/meu-pet" element={<MeuPet />} />
        </Route>
        <Route path="/farejar" element={<Farejar />} />
