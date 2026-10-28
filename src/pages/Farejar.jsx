@@ -2,41 +2,47 @@ import { useState } from "react";
 import pets from "../data/pets";
 import PetCard from "../components/PetCard";
 
-function Farejar() {
-    const [indiceAtual, setIndiceAtual] = useState(0);
+const PETS_QUE_CURTIRAM = [3];
 
-    function passarPet() {
-        setIndiceAtual(indiceAtual + 1);
+export default function Farejar() {
+     const [indice, setIndice] = useState(0);
+     const [match, setMatch] = useState(null);
+
+     const pet = pets[indice];
+
+     function curtir() {
+    if (PETS_QUE_CURTIRAM.includes(pet.id)) {
+      setMatch(pet);
     }
+    setIndice(indice + 1);
+  }
 
-    function curtirPet() {
-        const pet = pets[indiceAtual];
+  function passar() {
+    setIndice(indice + 1);
+  }
 
-        console.log("Pet curtido:", pet.nome);
+  return (
+    <main>
+      <h1>Farejar</h1>
+      <p>Um pet por vez. Dê uma patinha para quem você gostou.</p>
 
-        passarPet();
-    }
-
-    if (indiceAtual >= pets.length) {
-        return (
-            <div>
-                <h1>Farejar</h1>
-                <p>Você viu todos os pets!</p>
-            </div>
-        );
-    }
-
-    return (
+      {match && (
         <div>
-            <h1>Farejar</h1>
-
-            <PetCard
-                pet={pets[indiceAtual]}
-                onCurtir={curtirPet}
-                onPassar={passarPet}
-            />
+          Patinhas dadas com {match.nome}!
+          <button onClick={() => setMatch(null)}>
+            Continuar
+          </button>
         </div>
-    );
+      )}
+
+      {pet ? (
+        <PetCard pet={pet} onCurtir={curtir} onPassar={passar} />
+      ) : (
+        <div>
+          <p>Acabou as patinhas para se conectar!</p>
+        </div>
+      )}
+    </main>
+  );
 }
 
-export default Farejar;

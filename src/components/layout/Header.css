@@ -16,6 +16,12 @@
   gap: 10px;
 }
 
+.logo-image {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
 .logo-title {
   font-family: var(--fonte-titulo);
   font-weight: 800;
