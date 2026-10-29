@@ -27,13 +27,15 @@ if (user) {
 
   return (
     <div className="login-page">
-      <LoginHero />
+      <main className="login-container">
+        <LoginHero />
 
-      <AuthTabs
-        onLogin={login}
-        onCadastrar={cadastrar}
-        onSucesso={redirecionarAposLogin}
+        <AuthTabs
+          onLogin={login}
+          onCadastrar={cadastrar}
+          onSucesso={redirecionarAposLogin}
       />
+      </main>
     </div>
   )
 }
