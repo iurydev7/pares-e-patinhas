@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function PataIcon() {
   return (
     <svg className="login-hero__pata" viewBox="0 0 64 64" aria-hidden="true">
@@ -10,18 +12,19 @@ function PataIcon() {
         fill="currentColor"
       />
     </svg>
-  )
+  );
 }
 
 function LoginHero() {
   return (
     <section className="login-hero">
-      <p className="login-hero__marca">
-        <span className="login-hero__logo" aria-hidden="true" />
+      <Link to="/" className="login-hero__marca">
+        <img src="/petmatch-symbol.png" alt="" className="login-hero__imagem" />
+
         <span>
           Pares <span className="login-hero__e">&amp;</span> Patinhas
         </span>
-      </p>
+      </Link>
 
       <div className="login-hero__cartoes" aria-hidden="true">
         <span className="login-hero__cartao login-hero__cartao--amarelo">
@@ -37,7 +40,7 @@ function LoginHero() {
         Entre para farejar pets por perto e dar patinhas.
       </p>
     </section>
-  )
+  );
 }
 
-export default LoginHero
+export default LoginHero;

@@ -1,15 +1,4 @@
-/* PROVISÓRIO: fontes do PDF (Bricolage Grotesque e Figtree).
-   Remover esta linha quando a identidade visual carregar as fontes. */
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Figtree:wght@400;600;700&display=swap');
-
-/* ==========================================================================
-   Tela de login: baseada no protótipo do PDF de identidade visual (pág. 5).
-
-   Os valores de cor, fonte e raio vêm dos tokens do PDF (--ameixa, --goiaba...).
-   Se os tokens ainda não existirem no projeto, o valor depois da vírgula
-   (o "reserva") é usado. Quando a identidade visual for mesclada, os
-   reservas podem ser removidos.
-   ========================================================================== */
 
 .login-page {
   --lp-ameixa: var(--ameixa, #2A1540);
@@ -22,25 +11,162 @@
   --lp-fonte-texto: var(--fonte-texto, 'Figtree', system-ui, sans-serif);
   --lp-raio-card: var(--raio-card, 28px);
   --lp-raio-botao: var(--raio-botao, 999px);
-  /* Rosa claro do cartão: aparece no protótipo, mas não está nos tokens */
+ 
   --lp-rosa-claro: #F9C7D2;
-
-  display: grid;
-  grid-template-columns: 21fr 19fr;
   min-height: 100vh;
-  background: var(--lp-nevoa);
+  min-height: 100dvh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  box-sizing: border-box;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  background: radial-gradient(
+    circle at 8% 85%,
+    rgba(233, 221, 247, 0.95) 0%,
+    transparent 32%
+  ),
+  radial-gradient(
+    circle at 92% 12%,
+    rgba(249, 199, 210, 0.55) 0%,
+    transparent 28%
+  ),
+  linear-gradient(
+    135deg,
+    #FAF5FF 0%,
+    #F1E7FA 50%,
+    #FFF3F7 100%
+  );
   color: var(--lp-ameixa);
   font-family: var(--lp-fonte-texto);
 }
 
-/* ---------- Painel esquerdo: marca ---------- */
+.login-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  max-width: 1100px;
+  min-height: 620px;
+
+  border-radius: 28px;
+  overflow: hidden;
+
+  background: #FFFFFF;
+  box-shadow: 
+  0 35 80px rgba(42, 21, 64, 0.18),
+  0 12px 30px rgba(42, 21, 64, 0.10),
+  0 2px 8px rgba(42, 21, 64, 0.05);
+
+  border: 1px solid rgba(42, 21, 64, 0.06);
+}
+
+.login-container > :last-child {
+  background: #FFFFFF;
+}
+
+.login-pets-decoracao {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  width: clamp(160px, 20vw, 300px);
+  height: auto;
+
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 1;
+
+  filter: drop-shadow(
+    0 10px 20px rgba(42, 21, 64, 0.12)
+  );
+}
+
+/* Camada decorativa das patinhas */
+.login-patinhas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Estilo geral das patinhas */
+.patinha {
+  position: absolute;
+  font-size: 42px;
+  line-height: 1;
+  opacity: 0.12;
+  filter: grayscale(1);
+  user-select: none;
+}
+
+/* Superior esquerdo */
+.patinha-1 {
+  top: 10%;
+  left: 6%;
+  transform: rotate(-25deg);
+}
+
+.patinha-2 {
+  top: 27%;
+  left: 14%;
+  transform: rotate(20deg);
+  font-size: 28px;
+  opacity: 0.08;
+}
+
+/* Superior direito */
+.patinha-3 {
+  top: 12%;
+  right: 7%;
+  transform: rotate(30deg);
+}
+
+/* Inferior esquerdo */
+.patinha-4 {
+  bottom: 16%;
+  left: 7%;
+  transform: rotate(-15deg);
+}
+
+.patinha-5 {
+  bottom: 6%;
+  left: 20%;
+  transform: rotate(35deg);
+  font-size: 30px;
+  opacity: 0.09;
+}
+
+/* Lateral direita */
+.patinha-6 {
+  top: 48%;
+  right: 5%;
+  transform: rotate(-20deg);
+  font-size: 34px;
+  opacity: 0.10;
+}
+
+
 
 .login-hero {
   position: relative;
+
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 42px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  padding: 90px 42px 48px;
   background: var(--lp-ameixa);
   color: #fff;
   overflow: hidden;
@@ -57,6 +183,20 @@
   font-family: var(--lp-fonte-titulo);
   font-size: 15px;
   font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  color: #FFFFFF;
+  transition: opacity 0.2s ease;
+}
+.login-hero__marca:hover {
+  opacity: 0.8;
+}
+
+.login-hero__imagem {
+  width: 80px;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .login-hero__logo {
@@ -135,6 +275,7 @@
   font-size: 32px;
   font-weight: 800;
   line-height: 1.15;
+  text-align: center;
 }
 
 .login-hero__texto {
@@ -143,8 +284,6 @@
   line-height: 1.5;
   opacity: 0.85;
 }
-
-/* ---------- Painel direito: formulário ---------- */
 
 .login-form {
   width: min(300px, calc(100% - 48px));
@@ -236,46 +375,13 @@
   cursor: not-allowed;
 }
 
-/* ---------- Telas estreitas: painéis empilhados ---------- */
-
-@media (max-width: 800px) {
-  .login-page {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  .login-hero {
-    justify-content: flex-start;
-    padding: 28px 24px 32px;
-  }
-
-  .login-hero__marca {
-    position: static;
-    margin-bottom: 24px;
-  }
-
-  .login-hero__cartoes {
-    display: none;
-  }
-
-  .login-hero__titulo {
-    font-size: 26px;
-  }
-
-  .login-form {
-    padding: 32px 0 40px;
-  }
-}
-
-/* ---------- Abas "Entrar" / "Criar conta" ---------- */
-
 .login-painel {
   width: min(300px, calc(100% - 48px));
   margin: auto;
-  padding: 32px 0;
+  padding: 42px 0;
 }
 
-/* O formulário agora fica dentro do painel, que já define a largura */
+
 .login-painel .login-form {
   width: 100%;
   margin: 0;
@@ -315,7 +421,77 @@
 }
 
 @media (max-width: 800px) {
+  .login-page {
+    padding: 16px;
+    align-items: center;
+  }
+
+  .login-container {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: auto;
+    border-radius: 20px;
+  }
+
+  .login-pets-decoracao {
+    display: none;
+  }
+
+  .login-hero {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 20px 28px;
+  }
+
+  .login-hero__marca {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 16px;
+  }
+
+  .login-hero__imagem {
+    width: 60px;
+    height: auto;
+  }
+
+  .login-hero__cartoes {
+    display: none;
+  }
+
+  .login-hero__titulo {
+    font-size: 22px;
+    max-width: 100%;
+    margin: 0 0 10px;
+  }
+
+  .login-hero__texto {
+    font-size: 12px;
+    margin: 0;
+  }
+
   .login-painel {
-    padding: 32px 0 40px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 380px;
+    min-width: 0;
+    justify-self: center;
+    margin: 0 auto;
+    padding: 28px 20px 40px;
+  }
+
+  .login-painel .login-form {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .login-abas,
+  .form-field__input {
+    box-sizing: border-box;
+    width: 100%;
   }
 }
