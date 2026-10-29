@@ -1,0 +1,356 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Figtree:wght@400;600;700&display=swap');
+
+.login-page {
+  --lp-ameixa: var(--ameixa, #2A1540);
+  --lp-goiaba: var(--goiaba, #D63A5C);
+  --lp-manteiga: var(--manteiga, #FFD25E);
+  --lp-lavanda: var(--lavanda, #E9DDF7);
+  --lp-nevoa: var(--nevoa, #FAF5FF);
+  --lp-texto-suave: var(--texto-suave, #5B4A6E);
+  --lp-fonte-titulo: var(--fonte-titulo, 'Bricolage Grotesque', sans-serif);
+  --lp-fonte-texto: var(--fonte-texto, 'Figtree', system-ui, sans-serif);
+  --lp-raio-card: var(--raio-card, 28px);
+  --lp-raio-botao: var(--raio-botao, 999px);
+ 
+  --lp-rosa-claro: #F9C7D2;
+
+  display: grid;
+  grid-template-columns: 21fr 19fr;
+  min-height: 100vh;
+  background: var(--lp-nevoa);
+  color: var(--lp-ameixa);
+  font-family: var(--lp-fonte-texto);
+}
+
+.login-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 42px;
+  background: var(--lp-ameixa);
+  color: #fff;
+  overflow: hidden;
+}
+
+.login-hero__marca {
+  position: absolute;
+  top: 36px;
+  left: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--lp-fonte-titulo);
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  color: #FFFFFF;
+  transition: opacity 0.2s ease;
+}
+.login-hero__marca:hover {
+  opacity: 0.8;
+}
+
+.login-hero__imagem {
+  width: 80px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.login-hero__logo {
+  position: relative;
+  display: inline-block;
+  width: 34px;
+  height: 22px;
+}
+
+.login-hero__logo::before,
+.login-hero__logo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.login-hero__logo::before {
+  left: 0;
+  background: #fff;
+}
+
+.login-hero__logo::after {
+  left: 12px;
+  background: var(--lp-goiaba);
+  opacity: 0.95;
+}
+
+.login-hero__e {
+  color: var(--lp-manteiga);
+}
+
+.login-hero__cartoes {
+  position: relative;
+  width: 260px;
+  height: 190px;
+  margin-bottom: 4px;
+}
+
+.login-hero__cartao {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  height: 152px;
+  border-radius: var(--lp-raio-card);
+  color: var(--lp-ameixa);
+}
+
+.login-hero__cartao--amarelo {
+  top: 10px;
+  left: 0;
+  background: var(--lp-manteiga);
+  transform: rotate(-8deg);
+}
+
+.login-hero__cartao--rosa {
+  top: 28px;
+  left: 90px;
+  background: var(--lp-rosa-claro);
+  transform: rotate(6deg);
+}
+
+.login-hero__pata {
+  width: 54px;
+  height: 54px;
+}
+
+.login-hero__titulo {
+  max-width: 320px;
+  margin: 0 0 14px;
+  font-family: var(--lp-fonte-titulo);
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.login-hero__texto {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.login-form {
+  width: min(300px, calc(100% - 48px));
+  margin: auto;
+  padding: 32px 0;
+}
+
+.login-form__titulo {
+  margin: 0 0 6px;
+  font-family: var(--lp-fonte-titulo);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--lp-ameixa);
+}
+
+.login-form__subtitulo {
+  margin: 0 0 22px;
+  font-size: 13px;
+  color: var(--lp-texto-suave);
+}
+
+.form-field {
+  margin-bottom: 14px;
+}
+
+.form-field__label {
+  display: block;
+  margin: 0 0 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--lp-ameixa);
+}
+
+.form-field__input {
+  width: 100%;
+  height: 39px;
+  padding: 0 14px;
+  border: 1.5px solid var(--lp-lavanda);
+  border-radius: 14px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--lp-ameixa);
+}
+
+.form-field__input::placeholder {
+  color: #8d8397;
+}
+
+.form-field__input:focus {
+  outline: none;
+  border-color: var(--lp-goiaba);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lp-goiaba) 20%, transparent);
+}
+
+.login-form__erro {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lp-goiaba);
+}
+
+.login-form__botao {
+  width: 100%;
+  height: 41px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: var(--lp-raio-botao);
+  background: var(--lp-goiaba);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+
+.login-form__botao:hover:not(:disabled) {
+  filter: brightness(0.93);
+}
+
+.login-form__botao:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--lp-goiaba) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.login-form__botao:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-painel {
+  width: min(300px, calc(100% - 48px));
+  margin: auto;
+  padding: 32px 0;
+}
+
+
+.login-painel .login-form {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.login-abas {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+  padding: 4px;
+  border-radius: var(--lp-raio-botao);
+  background: var(--lp-lavanda);
+}
+
+.login-aba {
+  flex: 1;
+  height: 34px;
+  border: 0;
+  border-radius: var(--lp-raio-botao);
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lp-texto-suave);
+  cursor: pointer;
+}
+
+.login-aba--ativa {
+  background: #fff;
+  color: var(--lp-ameixa);
+}
+
+.login-aba:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--lp-goiaba) 35%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+
+  .login-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-content: start;
+    min-height: 100vh;
+  }
+
+  .login-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 20px 28px;
+  }
+
+  .login-hero__marca {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 16px;
+  }
+
+  .login-hero__imagem {
+    width: 60px;
+    height: auto;
+  }
+
+  .login-hero__cartoes {
+    display: none;
+  }
+
+  .login-hero__titulo {
+    font-size: 22px;
+    max-width: 100%;
+    margin: 0 0 10px;
+  }
+
+  .login-hero__texto {
+    font-size: 12px;
+    margin: 0;
+  }
+
+  .login-painel {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 340px;
+    min-width: 0;
+    justify-self: center;
+    margin: 0;
+    padding: 28px 20px 40px;
+  }
+
+  .login-painel .login-form {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .login-abas {
+    width: 100%;
+  }
+
+  .form-field__input {
+    box-sizing: border-box;
+    width: 100%;
+  }
+}

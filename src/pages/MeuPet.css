@@ -1,0 +1,181 @@
+.foto-principal-pet {
+  width: 100%;
+  height: 380px;
+  background-color: #ffd666;
+  overflow: hidden;
+}
+
+.foto-principal-pet img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.galeria-miniaturas {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.miniatura-pet {
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  cursor: pointer;
+  background-color: #f5f5f5;
+}
+
+.miniatura-pet img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.miniatura-ativa {
+  border-color: #28163c;
+}
+
+.badge-passeios {
+  background-color: #ffe7a0;
+}
+
+.badge-vacinas {
+  background-color: #cff3ea;
+}
+
+.btn.botao-patinha {
+  background-color: #d83b6b;
+  color: #ffffff;
+  border: 1px solid #d83b6b;
+  border-radius: 25px;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn.botao-patinha:hover {
+  background-color: #bc2857;
+  border-color: #bc2857;
+  color: #ffffff;
+}
+
+.btn.botao-compartilhar {
+  background-color: transparent;
+  color: #28163c;
+  border: 1px solid #28163c;
+  border-radius: 25px;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn.botao-compartilhar:hover {
+  background-color: #28163c;
+  color: #ffffff;
+}
+
+.cartao-tutor {
+  background-color: #ffffff;
+  border: 1px solid #e5dce9;
+  border-radius: 16px;
+  padding: 24px;
+  min-height: 140px;
+}
+
+.icone-tutor {
+  width: 55px;
+  height: 55px;
+  background-color: #f6c9d5;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.cartao-seguranca {
+  background-color: #cff3ea;
+  border-radius: 16px;
+  padding: 24px;
+  min-height: 140px;
+  height: 100%;
+}
+
+.cartao-seguranca h3 {
+  color: #176a58;
+}
+
+.cartao-seguranca p {
+  color: #376b60;
+}
+
+.btn-denunciar {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #176a58;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.titulo-secao {
+  color: #28163c;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.card-pet-raca {
+  background-color: #ffffff;
+  border: 1px solid #e5dce9;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 100%;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card-pet-raca:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(40, 22, 60, 0.12);
+}
+
+.imagem-card-pet {
+  width: 100%;
+  height: 190px;
+  overflow: hidden;
+}
+
+.imagem-card-pet img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.conteudo-card-pet {
+  padding: 16px;
+}
+
+.nome-card-pet {
+  color: #28163c;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.info-card-pet {
+  color: #6b6572;
+  font-size: 13px;
+  margin-bottom: 0;
+}
