@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/useAuth';
 import './Header.css';
 
 export default function Header() {
   const navigate = useNavigate();
-  const usuarioLogado = localStorage.getItem('token');
+  const { user, logout } = useAuth();
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const confirmarLogout = () => {
-    localStorage.removeItem('token');
+    logout();
     setMostrarModal(false);
     navigate('/login');
   };
@@ -37,7 +38,7 @@ export default function Header() {
 
       {/* Botão de Entrar ou Logout */}
       <div className="header-user">
-        {usuarioLogado ? (
+        {user ? (
           <button 
             onClick={() => setMostrarModal(true)} 
             className="btn-logout" 
