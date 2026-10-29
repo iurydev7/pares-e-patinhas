@@ -1,4 +1,3 @@
-import logo from "../../../public/petmatch-symbol.png";
 import { Link } from "react-router-dom";
 
 function PataIcon() {
@@ -20,7 +19,7 @@ function LoginHero() {
   return (
     <section className="login-hero">
       <Link to="/" className="login-hero__marca">
-        <img src={logo} alt="" className="login-hero__imagem" />
+        <img src="/petmatch-symbol.png" alt="" className="login-hero__imagem" />
 
         <span>
           Pares <span className="login-hero__e">&amp;</span> Patinhas
