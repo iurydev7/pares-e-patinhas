@@ -17,7 +17,7 @@ function CarouselHero() {
             <p>{hero.description}</p>
             
             {hero.button && (
-            <Link href={hero.button.url} className="hero_carousel__link">
+            <Link to={hero.button.url} className="hero_carousel__link">
               {hero.button.text}
             </Link>
           )}

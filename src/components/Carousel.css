@@ -9,24 +9,42 @@
 }
 
 .hero-carousel .carousel-control-prev{
+  display: grid;
+  place-items: center;
   top: auto;
   bottom: 15px;
   left: auto;
-  right: 100px;
-
-  width: 20px;
+  right: 90px;
+  width: 35px;
   height: 35px;
-  opacity: 0.8;
-}
+  padding: 1px;
+  border: 1px solid #b9a9c7;
+  border-radius: 50%;
+  background: transparent;
+  color: #78688b;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;}
 
 .hero-carousel .carousel-control-next{
+display: grid;
+  place-items: center;
   top: auto;
   bottom: 15px;
-  right: 70px;
-
-  width: 20px;
+  left: auto;
+  right: 50px;
+  width: 35px;
   height: 35px;
-  opacity: 0.8;
+  padding: 1px;
+  border: 1px solid #b9a9c7;
+  border-radius: 50%;
+  background: transparent;
+  color: #78688b;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
 
 .hero_carousel {
@@ -61,11 +79,15 @@
   font-size: clamp(1rem, 2vw, 1.25rem);
 }
 
+.carousel_capiton{
+  z-index: 10;
+}
+
 .hero_carousel__link {
   display: inline-block;
   padding: 0.7rem 1.25rem;
   border-radius: 0.25rem;
-  background-color: #432cd8;
+  background-color: #D63A5C;
   color: #fff;
   font-weight: 600;
   text-decoration: none;
