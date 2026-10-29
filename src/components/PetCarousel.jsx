@@ -12,7 +12,9 @@ function PetCarousel(){
     const el = carouselRef.current;
     if (!el) return;
 
-    const cardWidth = el.querySelector(".pet-card")?.offsetWidth + 12 || 220;
+    const card = el.querySelector(".pet-card");
+    const gap = Number.parseFloat(getComputedStyle(el).columnGap) || 0;
+    const cardWidth = card ? card.offsetWidth + gap : 220;
     const maxScroll = el.scrollWidth - el.clientWidth;
     let target = el.scrollLeft + direction * cardWidth;
 

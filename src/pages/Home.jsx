@@ -4,7 +4,7 @@ import PetCarousel from "../components/PetCarousel"
 
 function Home() {
   return (
-    <main>
+    <main className="home-page">
       <CarouselHero/>
       <PetCarousel/>
     </main>
