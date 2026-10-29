@@ -22,6 +22,10 @@
   padding: 32px;
   box-sizing: border-box;
 
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
   background: radial-gradient(
     circle at 8% 85%,
     rgba(233, 221, 247, 0.95) 0%,
@@ -46,6 +50,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
 
+  position: relative;
+  z-index: 2;
+
   width: 100%;
   max-width: 1100px;
   min-height: 620px;
@@ -64,6 +71,23 @@
 
 .login-container > :last-child {
   background: #FFFFFF;
+}
+
+.login-pets-decoracao {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  width: clamp(160px, 20vw, 300px);
+  height: auto;
+
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 1;
+
+  filter: drop-shadow(
+    0 10px 20px rgba(42, 21, 64, 0.12)
+  );
 }
 
 .login-hero {
@@ -339,6 +363,10 @@
     grid-template-columns: minmax(0, 1fr);
     min-height: auto;
     border-radius: 20px;
+  }
+
+  .login-pets-decoracao {
+    display: none;
   }
 
   .login-hero {
