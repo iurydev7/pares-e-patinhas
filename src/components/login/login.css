@@ -90,6 +90,73 @@
   );
 }
 
+/* Camada decorativa das patinhas */
+.login-patinhas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Estilo geral das patinhas */
+.patinha {
+  position: absolute;
+  font-size: 42px;
+  line-height: 1;
+  opacity: 0.12;
+  filter: grayscale(1);
+  user-select: none;
+}
+
+/* Superior esquerdo */
+.patinha-1 {
+  top: 10%;
+  left: 6%;
+  transform: rotate(-25deg);
+}
+
+.patinha-2 {
+  top: 27%;
+  left: 14%;
+  transform: rotate(20deg);
+  font-size: 28px;
+  opacity: 0.08;
+}
+
+/* Superior direito */
+.patinha-3 {
+  top: 12%;
+  right: 7%;
+  transform: rotate(30deg);
+}
+
+/* Inferior esquerdo */
+.patinha-4 {
+  bottom: 16%;
+  left: 7%;
+  transform: rotate(-15deg);
+}
+
+.patinha-5 {
+  bottom: 6%;
+  left: 20%;
+  transform: rotate(35deg);
+  font-size: 30px;
+  opacity: 0.09;
+}
+
+/* Lateral direita */
+.patinha-6 {
+  top: 48%;
+  right: 5%;
+  transform: rotate(-20deg);
+  font-size: 34px;
+  opacity: 0.10;
+}
+
+
+
 .login-hero {
   position: relative;
 
