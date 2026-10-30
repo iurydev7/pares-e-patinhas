@@ -1,4 +1,4 @@
-/* ---------- Página ---------- */
+
 .farejar {
   width: 100%;
   margin: -20 auto 0;
@@ -21,7 +21,7 @@
   margin: 2px 0 14px;
 }
 
-/* ---------- Área do card ---------- */
+
 .farejar-centro {
   display: flex;
   justify-content: center;
@@ -42,9 +42,7 @@
   padding: 80px 0;
 }
 
-/* A foto ocupa o espaço que sobra na tela, para tudo caber sem scroll.
-   Ajuste o 520px: é a soma do que fica fora da foto (header, rodapé,
-   título e corpo do card). Maior = foto menor. */
+
 .farejar .pet-card-imagem {
   height: clamp(120px, calc(100dvh - 520px), 300px);
 }
@@ -55,7 +53,7 @@
   object-fit: cover;
 }
 
-/* ---------- Par formado (modal) ---------- */
+
 .match-fundo {
   position: fixed;
   inset: 0;
@@ -116,9 +114,37 @@
   background: #c02f51;
 }
 
-/* ---------- Telas baixas ---------- */
+
 @media (max-height: 700px) {
   .farejar-subtitulo {
     display: none;
   }
+}
+
+.match-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.match-acoes .match-botao,
+.match-acoes .match-botao-sec {
+  width: 100%;
+}
+
+.match-botao-sec {
+  font-family: var(--fonte-texto, 'Figtree', system-ui, sans-serif);
+  font-weight: 700;
+  color: var(--ameixa, #2a1540);
+  background: #fff;
+  border: 2px solid var(--ameixa, #2a1540);
+  border-radius: var(--raio-botao, 999px);
+  padding: 12px 28px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.match-botao-sec:hover {
+  background: var(--ameixa, #2a1540);
+  color: #fff;
 }

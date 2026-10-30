@@ -1,11 +1,9 @@
 .pet-card {
     width: 100%;
-    max-width: 320px;
+    max-width: 290px;
     margin: 0 auto;
     border-radius: 22px;
     overflow: hidden;
-    background-color: #ffffff;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 
@@ -14,37 +12,35 @@
     box-shadow: 0 10px 25px rgba(45, 20, 75, 0.12) !important;
 }
 
-.pet-card-imagem {
-    width: 100%;
-    height: 320px;
-    background-color: #ffd45e;
-    overflow: hidden;
+.pet-card .pet-card-imagem {
+    height: 430px;
+    min-height: 430px;
+    flex-shrink: 0;
 }
 
-.pet-card-imagem img {
+.pet-card .pet-card-imagem img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top;
-}
-
-.pet-card-corpo {
-    padding: 10px;
+    object-position: center 20%;
 }
 
 .pet-card-corpo.pet-femea {
     background-color: #f0a7b6;
+    height: 250px;
 }
 
 .pet-card-corpo.pet-macho {
     background-color: #aedfeb;
+    height: 250px;
 }
 
 .pet-card-nome {
     color: #271241;
     font-size: 3rem;
     font-weight: 700;
-    padding: 5px;
+    padding: 2px;
+    transform: translateY(-px);
 }
 
 .pet-card-idade {
@@ -55,7 +51,7 @@
 }
 
 .pet-card-local {
-    color: #857499;
+    color: #6c439a;
     font-size: 1rem;
 }
 
@@ -76,7 +72,8 @@
 
 .pet-card-raca {
     color: #695285;
-    font-size: 0.9rem;
+    font-size: 1rem;
+    transform: translateY(-5px);
 }
 
 .pet-card-botoes .btn {
@@ -85,6 +82,7 @@
     font-size: 1rem;
     font-weight: 600;
     transition: background-color 0.2s ease;
+    transform: translateY(-10px);
 }
 
 .pet-btn-passar {
@@ -114,7 +112,7 @@
 
 @media (max-width: 400px) {
     .pet-card-imagem {
-        height: 190px;
+        height: 380px;
     }
 
     .pet-card-corpo {
