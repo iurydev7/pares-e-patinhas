@@ -122,3 +122,67 @@
 .header-container > div[style*="position: fixed"] button:hover {
   background-position: 0;
 }
+
+/* Responsividade para telemóveis e ecrãs pequenos */
+@media (max-width: 768px) {
+  .header-container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo user"
+      "nav nav";
+    align-items: center;
+    gap: 8px 12px;
+    padding: 12px 16px;
+  }
+
+  .header-logo {
+    grid-area: logo;
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 0;
+    width: 100%;
+  }
+
+  .logo-image {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+
+  .logo-title,
+  .logo-badge {
+    grid-column: 2;
+  }
+
+  .logo-title {
+    grid-row: 1;
+  }
+
+  .logo-badge {
+    grid-row: 2;
+    justify-self: start;
+    padding: 0 12px;
+  }
+
+  .header-nav {
+    grid-area: nav;
+    width: 100%;
+    margin-top: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-item {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .header-user {
+    grid-area: user;
+    justify-self: end;
+    margin-top: 0;
+  }
+}
