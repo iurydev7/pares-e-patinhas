@@ -39,7 +39,7 @@ const pets = [
         sexo: "Fêmea",
         raca: "Siamês",
         idade: 2,
-        cidade: "Tup",
+        cidade: "Tupi",
         estado: "Minas Gerais",
         imagem: "/images/felina.jpg"
     },
@@ -51,7 +51,7 @@ const pets = [
         raca: "Husky Siberiano",
         idade: 2,
         cidade: "Sobral",
-        estado: "Rio Grande do Norte",
+        estado: "Ceará",
         imagem: "/images/tufao.jpg"
     },
 
