@@ -1,7 +1,8 @@
 .header-container {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
   padding: 14px 28px;
   background-color: #ffffff;
   border-bottom: 1px solid var(--lavanda);
@@ -14,6 +15,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
 }
 
 .logo-image {
@@ -45,6 +47,8 @@
   padding: 4px;
   border-radius: var(--raio-botao, 999px);
   gap: 4px;
+  justify-self: center;
+  white-space: nowrap;
 }
 
 .nav-item {
@@ -70,6 +74,7 @@
 .header-user {
   display: flex;
   align-items: center;
+  justify-self: end;
 }
 
 .user-profile {
@@ -103,4 +108,17 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--ameixa);
+}
+
+.btn-logout,
+.header-container > div[style*="position: fixed"] button {
+  background-image: linear-gradient(110deg, transparent 40%, rgba(255, 255, 255, 0.7), transparent 60%);
+  background-size: 300% 100%;
+  background-position: 100%;
+  transition: background-position 0.7s ease;
+}
+
+.btn-logout:hover,
+.header-container > div[style*="position: fixed"] button:hover {
+  background-position: 0;
 }

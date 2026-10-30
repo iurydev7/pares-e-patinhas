@@ -1,49 +1,20 @@
-/*NAV ARROWS AND MARK*/
-
-.hero-carousel .carousel-indicators {
-  bottom: 15px;
-  left: 0;
-  right: 185%;
-
-  width: 70px;
-}
-
-.hero-carousel .carousel-control-prev{
-  top: auto;
-  bottom: 15px;
-  left: auto;
-  right: 100px;
-
-  width: 20px;
-  height: 35px;
-  opacity: 0.8;
-}
-
-.hero-carousel .carousel-control-next{
-  top: auto;
-  bottom: 15px;
-  right: 70px;
-
-  width: 20px;
-  height: 35px;
-  opacity: 0.8;
-}
-
-.hero_carousel {
+.hero-carousel {
+  width: 100%;
+  overflow: hidden;
   background-color: #212529;
 }
 
 .hero_carousel__image {
   display: block;
   width: 100%;
-  height: clamp(20rem, 55vw, 36rem);
+  height: clamp(20rem, 48vw, 36rem);
   object-fit: cover;
   filter: brightness(0.68);
 }
 
 .hero_carousel__caption {
   right: 12%;
-  bottom: 18%;
+  bottom: 5rem;
   left: 12%;
   text-align: left;
 }
@@ -65,7 +36,7 @@
   display: inline-block;
   padding: 0.7rem 1.25rem;
   border-radius: 0.25rem;
-  background-color: #432cd8;
+  background-color: #d63a5c;
   color: #fff;
   font-weight: 600;
   text-decoration: none;
@@ -78,48 +49,63 @@
   color: #fff;
 }
 
-/*RESPONSIVITY*/
-
-@media (max-width: 576px) {
-  .hero_carousel__image.slide-especial{
-  display: block;
-  width: 100%;
-  height: clamp(20rem, 55vw, 36rem);
-  object-fit: fill;
-  filter: brightness(0.68)
-  }
-  .hero_carousel__caption {
-    right: 15%;
-    bottom: 15%;
-    left: 15%;
-  }
-
-  .hero_carousel__caption.slide-especial h2{
-  max-width: 32rem;
-  margin-bottom: 0.75rem;
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 700;
-  color: rgb(255, 255, 255);
-  }
+.hero-carousel .carousel-indicators {
+  right: auto;
+  bottom: 1.25rem;
+  left: 12%;
+  justify-content: flex-start;
+  width: auto;
+  margin: 0;
 }
 
+.hero-carousel .carousel-control-prev,
+.hero-carousel .carousel-control-next {
+  top: auto;
+  bottom: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid rgb(255 255 255 / 70%);
+  border-radius: 50%;
+  opacity: 1;
+}
 
-@media (min-width: 768px){
-  .hero_carousel__image.slide-especial{
-  display: block;
-  width: 100%;
-  height: clamp(20rem, 55vw, 36rem);
-  object-fit: fill;
-  filter: brightness(0.68)
+.hero-carousel .carousel-control-prev {
+  right: 4.25rem;
+  left: auto;
+}
 
+.hero-carousel .carousel-control-next {
+  right: 1rem;
+}
+
+@media (max-width: 600px) {
+  .hero_carousel__image {
+    height: clamp(22rem, 100vw, 30rem);
   }
 
   .hero_carousel__caption {
-    right: 15%;
-    bottom: 15%;
-    left: 15%;
+    right: 7%;
+    bottom: 5rem;
+    left: 7%;
   }
 
-  
-  
+  .hero_carousel__caption h2 {
+    margin-bottom: 0.5rem;
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+
+  .hero_carousel__caption p {
+    margin-bottom: 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .hero_carousel__link {
+    padding: 0.6rem 1rem;
+  }
+
+  .hero-carousel .carousel-indicators {
+    left: 7%;
+  }
 }

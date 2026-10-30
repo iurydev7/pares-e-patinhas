@@ -10,7 +10,7 @@ const hero = [
     description: "Crie o perfil do seu pet e comece a farejar.",
     button: {
       text: "Criar perfil do pet",
-      url: "/meu-pet"
+      url: "/login"
     },
 
   },
@@ -23,6 +23,10 @@ const hero = [
     image: img3Hero,
       title: "Adoção",
       description: "Encontre um pet para você.",
+      button: {
+      text: "Venha nos conhecer",
+      url: "https://www.instagram.com/lartintin"
+    },
   },
 ];
 
