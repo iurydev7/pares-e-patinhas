@@ -5,9 +5,11 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'backend/node_modules', 'backend/coverage']),
+
+  // FRONT-END: React + Vite
   {
-    files: ['**/*.{js,jsx}'],
+    files: ['src/**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
@@ -15,7 +17,23 @@ export default defineConfig([
     ],
     languageOptions: {
       globals: globals.browser,
-      parserOptions: { ecmaFeatures: { jsx: true } },
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+  },
+
+  // BACK-END: Node.js + Express + Sequelize
+  {
+    files: ['backend/**/*.js'],
+    extends: [js.configs.recommended],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        ...globals.node,
+      },
     },
   },
 ])
