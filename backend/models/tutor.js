@@ -9,43 +9,46 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate() {
-  // As associações com outros models serão criadas aqui.
-}
+    static associate(db) {
+      Tutor.hasMany(db.Animal, {
+        foreignKey: 'tutorId',
+        as: 'animais',
+      });
+    }
   }
   Tutor.init(
-  {
-    nome: {
-      type: DataTypes.STRING(120),
-      allowNull: false,
-    },
+    {
+      nome: {
+        type: DataTypes.STRING(120),
+        allowNull: false,
+      },
 
-    email: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      unique: true,
-    },
+      email: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: true,
+      },
 
-    senhaHash: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
+      senhaHash: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
 
-    cidade: {
-      type: DataTypes.STRING(100),
-      allowNull: true,
-    },
+      cidade: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+      },
 
-    estado: {
-      type: DataTypes.STRING(2),
-      allowNull: true,
+      estado: {
+        type: DataTypes.STRING(2),
+        allowNull: true,
+      },
     },
-  },
-  {
-    sequelize,
-    modelName: "Tutor",
-    tableName: "tutores",
-  }
-);
+    {
+      sequelize,
+      modelName: "Tutor",
+      tableName: "tutores",
+    }
+  );
   return Tutor;
 };
