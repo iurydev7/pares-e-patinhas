@@ -1,4 +1,11 @@
+## 🚀 Como rodar o projeto localmente
 
+1. **Instalar dependências:** `npm install`
+2. **Criar o .env:** Copie o `.env.example` para `.env` e ajuste as credenciais do seu banco local.
+3. **Executar Migrations:** `npx sequelize-cli db:migrate`
+4. **Iniciar o servidor:** `npm run dev`
+
+---
 ## Arquitetura do Back-end
 
 O back-end do **Pares & Patinhas** utiliza uma arquitetura em camadas, construída com Node.js, Express, Sequelize e MySQL.
