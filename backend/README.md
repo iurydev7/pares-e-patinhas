@@ -5,6 +5,19 @@
 3. **Executar Migrations:** `npx sequelize-cli db:migrate`
 4. **Iniciar o servidor:** `npm run dev`
 
+## Configuração e Banco de Dados Local
+
+Para configurar e rodar o banco de dados na tua máquina local, cria um arquivo `.env` na raiz da pasta `backend`, baseando-te no `.env.example`, e preenche com as tuas credenciais locais do MySQL/MariaDB:
+
+```env
+PORT=3000
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASSWORD=tua_senha_aqui
+DB_NAME=pares_e_patinhas
+DB_PORT=3306
+```
+
 ---
 ## Arquitetura do Back-end
 
