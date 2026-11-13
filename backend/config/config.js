@@ -6,6 +6,11 @@ const configBase = {
   host: process.env.DB_HOST,
   port: Number(process.env.DB_PORT) || 3306,
   dialect: "mysql",
+  dialectOptions: {
+    ssl: {
+      minVersion: 'TLSv1.2'
+    }
+  }
 };
 
 module.exports = {
