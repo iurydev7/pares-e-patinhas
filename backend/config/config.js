@@ -1,13 +1,14 @@
 require("dotenv").config();
 
-const sslOptions = process.env.DB_SSL === "true"
-  ? {
-      minVersion: "TLSv1.2",
-      ...(process.env.DB_SSL_CA
-        ? { ca: process.env.DB_SSL_CA.replace(/\\n/g, "\n") }
-        : {}),
-    }
-  : undefined;
+const sslOptions =
+  process.env.DB_SSL === "false" && process.env.NODE_ENV !== "production"
+    ? undefined
+    : {
+        minVersion: "TLSv1.2",
+        ...(process.env.DB_SSL_CA
+          ? { ca: process.env.DB_SSL_CA.replace(/\\n/g, "\n") }
+          : {}),
+      };
 
 const configBase = {
   username: process.env.DB_USER,
