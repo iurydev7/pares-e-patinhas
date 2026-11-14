@@ -1,64 +1,64 @@
-import { useEffect, useState } from "react";
+
+import { useCallback, useEffect, useState } from "react";
 import api from "../services/api";
 import { AuthContext } from "./AuthContext";
 
-const CHAVE = "pp_usuario";
-const TEMPO_SESSAO = 30 * 30 * 1000;
-function lerUsuarioSalvo() {
+const TOKEN_KEY = "pp_token";
+const CHAVE_ANTIGA = "pp_usuario";
+
+// Lê o horário de expiração informado no JWT
+function obterExpiracao(token) {
   try {
-    const token = localStorage.getItem("pp_token");
+    const partePayload = token.split(".")[1];
 
-    if (!token) {
-      localStorage.removeItem(CHAVE);
-      return null;
-    }
-    const salvo = localStorage.getItem(CHAVE);
+    if (!partePayload) return null;
 
-    if (!salvo) return null;
+    const base64 = partePayload
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
 
-    const sessao = JSON.parse(salvo);
+    const payload = JSON.parse(atob(base64));
 
-    if (
-      !sessao.usuario ||
-      typeof sessao.expiraEm !== "number" ||
-      Date.now() >= sessao.expiraEm
-    ) {
-      localStorage.removeItem(CHAVE);
+    if (typeof payload.exp !== "number") {
       return null;
     }
 
-    return sessao.usuario;
+    // O JWT usa segundos; JavaScript usa milissegundos
+    return payload.exp * 1000;
   } catch {
-    localStorage.removeItem(CHAVE);
     return null;
   }
 }
 
+// Adapta o formato do backend ao frontend
+function formatarTutor(tutor) {
+  return {
+    id: tutor.id,
+    name: tutor.nome,
+    email: tutor.email,
+  };
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(lerUsuarioSalvo);
+  const [user, setUser] = useState(null);
   const [verificando, setVerificando] = useState(true);
 
-  function logout() {
-    localStorage.removeItem("pp_token");
+  // Encerra a sessão local
+  const logout = useCallback(() => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(CHAVE_ANTIGA);
     setUser(null);
+  }, []);
+
+  // Inicia a sessão após login ou cadastro
+  function iniciarSessao(token, tutor) {
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.removeItem(CHAVE_ANTIGA);
+
+    setUser(formatarTutor(tutor));
   }
 
-  function iniciarSessao(registro) {
-    const usuario = {
-      id: registro.id,
-      name: registro.name,
-      email: registro.email,
-    };
-
-    const sessao = {
-      usuario,
-      expiraEm: Date.now() + TEMPO_SESSAO,
-    };
-
-    localStorage.setItem(CHAVE, JSON.stringify(sessao));
-    setUser(usuario);
-  }
-
+  // Autentica um tutor existente
   async function login(email, senha) {
     try {
       const resposta = await api.post("/auth/login", {
@@ -72,15 +72,7 @@ export function AuthProvider({ children }) {
         throw new Error("Resposta de autenticação inválida.");
       }
 
-      localStorage.setItem("pp_token", token);
-
-      const usuario = {
-        id: tutor.id,
-        name: tutor.nome,
-        email: tutor.email,
-      };
-
-      iniciarSessao(usuario);
+      iniciarSessao(token, tutor);
 
       return true;
     } catch (error) {
@@ -92,63 +84,50 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Cadastra e autentica automaticamente
   async function cadastrar(nome, email, senha) {
-    const emailLimpo = email.trim().toLowerCase();
+    try {
+      const resposta = await api.post("/auth/register", {
+        nome: nome.trim(),
+        email: email.trim().toLowerCase(),
+        senha,
+      });
 
-    const existentes = await api.get("/users", {
-      params: { email: emailLimpo },
-    });
+      const { token, tutor } = resposta.data;
 
-    if (existentes.data.length > 0) {
-      return false;
+      if (!token || !tutor) {
+        throw new Error("Resposta de cadastro inválida.");
+      }
+
+      iniciarSessao(token, tutor);
+
+      return true;
+    } catch (error) {
+      if (error.response?.status === 409) {
+        return false;
+      }
+
+      throw error;
     }
-
-    const resposta = await api.post("/users", {
-      name: nome.trim(),
-      email: emailLimpo,
-      password: senha,
-    });
-
-    iniciarSessao(resposta.data);
-    return true;
   }
 
-  useEffect(() => {
-    if (!user) return;
-
-    const sessaoSalva = localStorage.getItem(CHAVE);
-
-    if (!sessaoSalva) {
-      return;
-    }
-
-    let expiraEm;
-
-    try {
-      expiraEm = JSON.parse(sessaoSalva).expiraEm;
-    } catch {
-      return;
-    }
-
-    const tempoRestante = expiraEm - Date.now();
-
-    if (tempoRestante <= 0) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      logout();
-    }, tempoRestante);
-
-    return () => clearTimeout(timer);
-  }, [user]);
+  // Valida a sessão ao iniciar ou atualizar a aplicação
   useEffect(() => {
     let ativo = true;
 
-    const token = localStorage.getItem("pp_token");
+    localStorage.removeItem(CHAVE_ANTIGA);
+
+    const token = localStorage.getItem(TOKEN_KEY);
 
     if (!token) {
-      setUser(null);
+      setVerificando(false);
+      return;
+    }
+
+    const expiracao = obterExpiracao(token);
+
+    if (!expiracao || Date.now() >= expiracao) {
+      logout();
       setVerificando(false);
       return;
     }
@@ -157,27 +136,37 @@ export function AuthProvider({ children }) {
       try {
         const resposta = await api.get("/auth/me");
 
-        if (!ativo) return;
+        if (
+          !ativo ||
+          localStorage.getItem(TOKEN_KEY) !== token
+        ) {
+          return;
+        }
 
         const tutor = resposta.data.tutor;
 
         if (!tutor) {
-          throw new Error("Dados do tutor não encontrados.");
+          throw new Error("Tutor não encontrado.");
         }
 
-        setUser({
-          id: tutor.id,
-          name: tutor.nome,
-          email: tutor.email,
-        });
+        setUser(formatarTutor(tutor));
       } catch (error) {
-        if (!ativo) return;
+        if (
+          !ativo ||
+          localStorage.getItem(TOKEN_KEY) !== token
+        ) {
+          return;
+        }
 
-        setUser(null);
-
-        if (error.response?.status === 401) {
-          localStorage.removeItem("pp_token");
-          localStorage.removeItem(CHAVE);
+        // Token rejeitado pelo backend
+        if (
+          error.response?.status === 401 ||
+          error.response?.status === 403
+        ) {
+          logout();
+        } else {
+          // Não libera acesso se a validação falhar
+          setUser(null);
         }
       } finally {
         if (ativo) {
@@ -191,10 +180,38 @@ export function AuthProvider({ children }) {
     return () => {
       ativo = false;
     };
-  }, []);
+  }, [logout]);
+
+  // Encerra a sessão quando o JWT expirar
+  useEffect(() => {
+    if (!user) return;
+
+    const token = localStorage.getItem(TOKEN_KEY);
+    const expiracao = token ? obterExpiracao(token) : null;
+
+    if (!expiracao || Date.now() >= expiracao) {
+      logout();
+      return;
+    }
+
+    const tempoRestante = expiracao - Date.now();
+
+    const timer = setTimeout(() => {
+      logout();
+    }, tempoRestante);
+
+    return () => clearTimeout(timer);
+  }, [user, logout]);
+
   return (
     <AuthContext.Provider
-      value={{ user, login, cadastrar, logout, verificando }}
+      value={{
+        user,
+        login,
+        cadastrar,
+        logout,
+        verificando,
+      }}
     >
       {children}
     </AuthContext.Provider>
