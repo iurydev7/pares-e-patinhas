@@ -17,6 +17,8 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.get("/", (req, res) => res.redirect("/api/health"));
+
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
