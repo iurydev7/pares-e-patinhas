@@ -2,11 +2,53 @@ const { Router } = require("express");
 
 const { login } = require("../controllers/loginController");
 const { me } = require("../controllers/meController");
+const { register } = require("../controllers/registerController");
 
 const authMiddleware = require("../middlewares/authMiddlewares");
 
 const router = Router();
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Cadastrar novo tutor
+ *     tags:
+ *       - Autenticação
+ *     description: Cria um tutor e retorna um token JWT.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nome
+ *               - email
+ *               - senha
+ *             properties:
+ *               nome:
+ *                 type: string
+ *                 example: Tutor Teste
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: tutor.teste002@example.com
+ *               senha:
+ *                 type: string
+ *                 format: password
+ *                 example: Teste@12345
+ *     responses:
+ *       201:
+ *         description: Tutor cadastrado com sucesso. Retorna JWT e tutor.
+ *       400:
+ *         description: Dados inválidos ou obrigatórios ausentes.
+ *       409:
+ *         description: E-mail já cadastrado.
+ *       500:
+ *         description: Erro interno do servidor.
+ */
+router.post("/register", register);
 /**
  * @swagger
  * /api/auth/login:
@@ -42,8 +84,6 @@ const router = Router();
  *         description: Credenciais inválidas.
  */
 router.post("/login", login);
-router.post("/login", login);
-
 /**
  * @swagger
  * /api/auth/me:
@@ -81,6 +121,6 @@ router.post("/login", login);
  *         description: Erro interno do servidor.
  */
 router.get("/me", authMiddleware, me);
-router.get("/me", authMiddleware, me);
+
 
 module.exports = router;
