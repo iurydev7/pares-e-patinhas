@@ -6,7 +6,7 @@ import "../components/login/login.css";
 import petsLogin from "../assets/pets-login.png";
 
 function Login() {
-  const { user, login, cadastrar } = useAuth();
+  const { user, login, cadastrar, verificando } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -19,6 +19,10 @@ function Login() {
 
   function redirecionarAposLogin() {
     navigate(destino, { replace: true });
+  }
+  
+  if (verificando) {
+    return <div role="status">Verificando sua sessão...</div>;
   }
 
   if (user) {
@@ -36,14 +40,14 @@ function Login() {
           onSucesso={redirecionarAposLogin}
         />
       </main>
-    <div className="login-patinhas" aria-hidden>
-      <span className="patinha patinha-1">🐾</span>
-      <span className="patinha patinha-2">🐾</span>
-      <span className="patinha patinha-3">🐾</span>
-      <span className="patinha patinha-4">🐾</span>
-      <span className="patinha patinha-5">🐾</span>
-      <span className="patinha patinha-6">🐾</span>
-    </div>
+      <div className="login-patinhas" aria-hidden>
+        <span className="patinha patinha-1">🐾</span>
+        <span className="patinha patinha-2">🐾</span>
+        <span className="patinha patinha-3">🐾</span>
+        <span className="patinha patinha-4">🐾</span>
+        <span className="patinha patinha-5">🐾</span>
+        <span className="patinha patinha-6">🐾</span>
+      </div>
 
       <img
         src={petsLogin}
