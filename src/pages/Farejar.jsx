@@ -1,91 +1,147 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import pets from "../data/pets";
 import PetCard from "../components/PetCard";
-import './Farejar.css';
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
+import { usePetAtivo } from "../context/usePetAtivo";
+import {
+  lerFilaFarejar,
+  removerDaFilaFarejar,
+} from "../services/farejarStorage";
+import "./Farejar.css";
 
-const meuPetId = '1'
-const  macthId= ['5']
-
-const chatFuncionando = false
+const matchIds = ["5"];
+const chatFuncionando = false;
 
 function Farejar() {
-  const [fila, setFila] = useState(() =>
-    pets.filter((p) => String(p.id) !== meuPetId)
-  )
-  const [match, setMatch] = useState(null)
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { user } = useAuth();
+  const { petAtivo } = usePetAtivo();
+
+  const tutorId = String(user?.id ?? user?.email ?? "visitante");
+
+  const petAtivoId = petAtivo?.id;
+
+  const [fila, setFila] = useState(() => lerFilaFarejar(tutorId, petAtivoId));
+
+  const [match, setMatch] = useState(() => {
+    const idMatch = location.state?.matchPetId;
+
+    return pets.find((pet) => String(pet.id) === String(idMatch)) || null;
+  });
+
   const [avisoChat, setAvisoChat] = useState(false);
+  const [erro, setErro] = useState("");
+
+  useEffect(() => {
+    if (location.state?.matchPetId != null) {
+      navigate("/farejar", {
+        replace: true,
+        state: null,
+      });
+    }
+  }, [location.state?.matchPetId, navigate]);
 
   function decidir(tipo) {
-    const pet = fila[0]
-    if (!pet) return 
-      setFila((f) => f.slice(1))
-    if (tipo === 'curtir' && macthId.includes(String(pet.id))) {
-      setMatch(pet)
+    const petAtual = fila[0];
+
+    if (!petAtual) return;
+
+    try {
+      const resultado = removerDaFilaFarejar(tutorId, petAtivoId, petAtual.id);
+
+      if (!resultado.alterou) return;
+
+      setFila(resultado.fila);
+      setErro("");
+
+      if (tipo === "curtir" && matchIds.includes(String(petAtual.id))) {
+        setMatch(petAtual);
+      }
+    } catch {
+      setErro("Não foi possível registrar sua decisão.");
     }
   }
 
-const pet = fila[0]
+  function abrirChat() {
+    if (!chatFuncionando) {
+      setAvisoChat(true);
+      return;
+    }
 
-const navigate = useNavigate();
+    if (!match) return;
 
-function abrirChat() {
-  if (!chatFuncionando) {
-    setAvisoChat(true);
-    return;
+    navigate(`/chat/${match.id}`);
   }
-  const id = macthId
-  setMatch(null);
-  navigate(`/chat/${id}`);
-}
 
-function fecharMatch() {
-  setMatch(null);
-  setAvisoChat(false);
-}
+  function fecharMatch() {
+    setMatch(null);
+    setAvisoChat(false);
+  }
 
-return (
-  <div className="farejar">
-    <h1 className="farejar-titulo">Farejar</h1>
-    <p className="farejar-subtitulo">Um pet por vez. Dê uma patinha para quem você gostou.
-    </p>
-  <section className="farejar-centro">
-    {!pet ? (
-      <p className="farejar-vazio">Acabaram os pets!</p>
-    ) : (
-      <PetCard
-          pet={pet}
-          onCurtir={() => decidir('curtir')}
-          onPassar={() => decidir('passar')}
-      />
-    )}
-  </section>
+  const pet = fila[0];
 
-    {match && ( 
-      <div className="match-fundo">
-        <div className="match-caixa">
-          <h2>É um match!</h2>
-          <img src={match.imagem} alt={match.nome}/>
+  return (
+    <div className="farejar">
+      <h1 className="farejar-titulo">Farejar</h1>
+
+      <p className="farejar-subtitulo">
+        Um pet por vez. Dê uma patinha para quem você gostou.
+      </p>
+
+      {erro && (
+        <p className="text-danger" role="alert">
+          {erro}
+        </p>
+      )}
+
+      <section className="farejar-centro">
+        {!pet ? (
+          <p className="farejar-vazio">Acabaram os pets!</p>
+        ) : (
+          <PetCard
+            pet={pet}
+            onCurtir={() => decidir("curtir")}
+            onPassar={() => decidir("passar")}
+          />
+        )}
+      </section>
+
+      {match && (
+        <div className="match-fundo">
+          <div className="match-caixa">
+            <h2>É um match!</h2>
+
+            <img src={match.imagem} alt={match.nome} />
+
             <p>Você e {match.nome} se curtiram.</p>
+
             {avisoChat && (
               <div className="alert alert-warning" role="alert">
-              Em breve
+                Em breve
               </div>
             )}
 
             <div className="match-acoes">
-              <button className="match-botao" onClick={abrirChat}>
-                chat
+              <button type="button" className="match-botao" onClick={abrirChat}>
+                Chat
               </button>
-              <button className="match-botao" onClick={() => setMatch(null)}>
+
+              <button
+                type="button"
+                className="match-botao"
+                onClick={fecharMatch}
+              >
                 Continuar farejando
-                </button>
+              </button>
             </div>
-        </div>  
-      </div>
-    )}
-  </div>
-  )
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default Farejar
+export default Farejar;

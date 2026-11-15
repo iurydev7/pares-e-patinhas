@@ -1,0 +1,37 @@
+[
+  {
+    "nome": "Maya",
+    "raca": "yokishare",
+    "idade": 6,
+    "genero": "femea",
+    "porte": "pequeno",
+    "vacinas": "sim",
+    "personalidade": "Danada! brincalhona!",
+    "foto": "/uploads/pets/Maya-1.jfif",
+    "fotos": ["/uploads/pets/Maya-1.jfif", "/uploads/pets/Maya-2.jpeg"],
+    "id": "5f8e0033-1a0e-4a96-8151-6412fbe4b3b5",
+    "cidade": "Fortaleza",
+    "estado": "CE",
+    "descricao": "Danada! brincalhona!"
+  },
+  {
+    "nome": "Bento",
+    "raca": "Border Collie",
+    "idade": 7,
+    "genero": "macho",
+    "porte": "grande",
+    "vacinas": "sim",
+    "personalidade": "gente boa!",
+    "foto": "/uploads/pets/Bento-1.jfif",
+    "fotos": [
+      "/uploads/pets/Bento-1.jfif",
+      "/uploads/pets/Bento-2.jfif",
+      "/uploads/pets/Bento-3.jfif",
+      "/uploads/pets/Bento-4.jfif"
+    ],
+    "id": "94cf425e-6c11-4131-932f-d4a56fcec12f",
+    "descricao": "Com aparência atlética, o cachorro tem um tronco ligeiramente mais longo que a altura dos ombros. São encontrados cães da raça Border Collie com duas variações de pelagem, uma curta e outra moderadamente longa. Nos dois casos, a cobertura é densa e de textura média, enquanto o subpelo é macio e denso.\n\nUma das características do Border Collie é ter cores bem diversificadas, com manchas brancas pelo corpo. O focinho é afilado e moderadamente curto. Os olhos são bem separados e de tamanho médio.",
+    "cidade": "Fortaleza",
+    "estado": "CE"
+  }
+]

@@ -1,29 +1,45 @@
-import'./Carousel.css'
+import "./Carousel.css";
 import { Link } from "react-router-dom";
 import { Carousel } from "react-bootstrap";
-import hero from '../data/heroSlide';
-
+import { useAuth } from "../context/useAuth";
+import hero from "../data/heroSlide";
 
 function CarouselHero() {
+  const { user } = useAuth();
+
   return (
-    <Carousel className='hero-carousel'>
+    <Carousel className="hero-carousel">
+      {hero.map((slide) => {
+        const destino =
+          slide.button?.text?.trim().toLowerCase() === "criar perfil do pet"
+            ? user
+              ? "/minha-conta"
+              : "/login"
+            : slide.button?.url;
 
-      {hero.map((hero) => (
-        <Carousel.Item key={hero.title}>
-          <img className={`hero_carousel__image ${hero.className || ''}`} src={hero.image} alt={hero.title} />
+        return (
+          <Carousel.Item key={slide.title}>
+            <img
+              className={`hero_carousel__image ${slide.className || ""}`}
+              src={slide.image}
+              alt={slide.title}
+            />
 
-          <Carousel.Caption className={`hero_carousel__caption ${hero.className||''}`}>
-            <h2>{hero.title}</h2>
-            <p>{hero.description}</p>
-            
-            {hero.button && (
-            <Link to={hero.button.url} className="hero_carousel__link">
-              {hero.button.text}
-            </Link>
-          )}
-          </Carousel.Caption>
-        </Carousel.Item>
-      ))}
+            <Carousel.Caption
+              className={`hero_carousel__caption ${slide.className || ""}`}
+            >
+              <h2>{slide.title}</h2>
+              <p>{slide.description}</p>
+
+              {slide.button && (
+                <Link to={destino} className="hero_carousel__link">
+                  {slide.button.text}
+                </Link>
+              )}
+            </Carousel.Caption>
+          </Carousel.Item>
+        );
+      })}
     </Carousel>
   );
 }
