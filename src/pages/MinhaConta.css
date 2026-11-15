@@ -1,0 +1,822 @@
+.minha-conta {
+  min-height: 100vh;
+  background-color: #fffaf8;
+  color: #352c30;
+}
+
+.minha-conta .cadastro-pet-conteudo {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.minha-conta .cadastro-pet-cabecalho {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.minha-conta .cadastro-pet-cabecalho h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #3d2932;
+  margin-bottom: 12px;
+}
+
+.minha-conta .cadastro-pet-cabecalho p {
+  font-size: 1rem;
+  color: #777;
+}
+
+.minha-conta .formulario-pet {
+  width: 100%;
+  min-width: 0;
+  background-color: #ffffff;
+  padding: 32px;
+  border: 1px solid #f0e5e8;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.minha-conta .formulario-pet:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.minha-conta .formulario-pet h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #443039;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0e5e8;
+}
+
+.minha-conta .formulario-pet p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.minha-conta .formulario-pet strong {
+  color: #352c30;
+  font-weight: 600;
+}
+
+.minha-conta .formulario-pet .form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #443039;
+}
+
+.minha-conta .formulario-pet .form-control {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid #ded6e3;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #352c30;
+  font-size: 15px;
+}
+
+.minha-conta .formulario-pet .form-control:focus {
+  border-color: #c65383;
+  box-shadow: 0 0 0 3px rgba(198, 83, 131, 0.13);
+}
+
+.minha-conta .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  background-color: #c65383;
+  color: #ffffff;
+  border: 1px solid #c65383;
+  border-radius: 10px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.minha-conta .btn-primary:hover {
+  background-color: #aa3d6a;
+  border-color: #aa3d6a;
+  color: #ffffff;
+}
+
+.minha-conta .btn-primary:focus-visible {
+  outline: 3px solid #e8a9c3;
+  outline-offset: 3px;
+}
+
+.minha-conta .btn-acao-conta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 190px;
+  max-width: 100%;
+  min-height: 48px;
+  padding: 10px 16px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.minha-conta .tutor-perfil-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+}
+
+.minha-conta .tutor-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 100px;
+  height: 100px;
+  padding: 2px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow:
+    0 0 0 2px #f3dbe5,
+    0 4px 12px rgba(198, 83, 131, 0.12);
+}
+
+.minha-conta .tutor-avatar-imagem {
+  display: block;
+  width: 96px;
+  height: 96px;
+  max-width: none;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.minha-conta .tutor-avatar-placeholder {
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.minha-conta .tutor-perfil-informacoes {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.minha-conta .tutor-perfil-informacoes p {
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.minha-conta .tutor-perfil-informacoes p:last-child {
+  margin-bottom: 0;
+}
+
+.minha-conta .tutor-foto-edicao {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+  padding: 18px;
+  background-color: #fff9fb;
+  border: 1px solid #f1dfe7;
+  border-radius: 14px;
+}
+
+.minha-conta .tutor-foto-controles {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.minha-conta .tutor-foto-controles .form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #443039;
+  font-weight: 700;
+}
+
+.minha-conta .tutor-foto-controles input[type="file"] {
+  width: 100%;
+  min-width: 0;
+  padding: 7px;
+  background-color: #ffffff;
+  border: 1px solid #ded6e3;
+  border-radius: 10px;
+  color: #665860;
+  font-size: 13px;
+}
+
+.minha-conta .tutor-foto-controles input[type="file"]::file-selector-button {
+  padding: 8px 12px;
+  margin-right: 12px;
+  border: 0;
+  border-radius: 7px;
+  background-color: #f8dce8;
+  color: #963c60;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.minha-conta
+  .tutor-foto-controles
+  input[type="file"]::file-selector-button:hover {
+  background-color: #efc4d6;
+}
+
+.minha-conta .tutor-foto-controles small {
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.minha-conta .tutor-foto-controles .btn-link {
+  color: #a43f6b;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.minha-conta .tutor-foto-controles .btn-link:hover {
+  color: #85294e;
+  text-decoration: underline;
+}
+
+.minha-conta .tutor-form-acoes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.minha-conta .btn-cancelar-tutor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 46px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  background-color: #ffffff;
+  border: 1px solid #d8cbd2;
+  color: #765f6b;
+  transition: all 0.2s ease;
+}
+
+.minha-conta .btn-cancelar-tutor:hover {
+  background-color: #f8f1f5;
+  border-color: #c65383;
+  color: #a43f6b;
+}
+
+.minha-conta .btn-cancelar-tutor:focus-visible {
+  outline: 3px solid #c65383;
+  outline-offset: 3px;
+}
+
+.minha-conta .pet-card-perfil {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #e9dfe4;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(53, 44, 48, 0.04);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.minha-conta .pet-card-perfil:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(60, 40, 50, 0.12);
+}
+
+.minha-conta .pet-card-perfil-ativo {
+  border-color: #c65383;
+  box-shadow:
+    0 0 0 1px rgba(198, 83, 131, 0.35),
+    0 5px 18px rgba(198, 83, 131, 0.12);
+}
+
+.minha-conta .pet-card-link-perfil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+.minha-conta .pet-card-link-perfil:focus-visible {
+  outline: 3px solid #c65383;
+  outline-offset: -4px;
+}
+
+.minha-conta .pet-card-midia {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 145px;
+  padding: 0;
+  background-color: #faf6f8;
+  overflow: hidden;
+}
+
+.minha-conta .pet-card-foto {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0;
+}
+
+.minha-conta .pet-card-sem-foto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #b999a8;
+}
+
+.minha-conta .pet-card-sem-foto span {
+  font-size: 32px;
+}
+
+.minha-conta .pet-card-sem-foto small {
+  font-size: 12px;
+}
+
+.minha-conta .pet-card-selo-ativo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 10px;
+  color: #963c60;
+  background-color: #fff1f6;
+  border: 1px solid #e8bdcf;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  box-shadow: 0 2px 8px rgba(53, 44, 48, 0.05);
+}
+
+.minha-conta .pet-card-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 15px;
+}
+
+.minha-conta .pet-card-identidade h3 {
+  margin: 0 0 3px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #352c30;
+}
+
+.minha-conta .pet-card-identidade .pet-card-raca {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #85757d;
+  line-height: 1.4;
+}
+
+.minha-conta .pet-card-detalhes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.minha-conta .pet-card-detalhes span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 9px;
+  background-color: #f6f3f5;
+  color: #665860;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.minha-conta .pet-card-rodape {
+  position: relative;
+  z-index: 3;
+  padding-top: 12px;
+  border-top: 1px solid #f1e8ec;
+  pointer-events: none;
+}
+
+.minha-conta .pet-card-botao-selecionar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 42px;
+  padding: 7px 10px;
+  color: #a43f6b;
+  background-color: #fff4f8;
+  border: 1px solid #e8bdcf;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.2s ease;
+}
+
+.minha-conta .pet-card-botao-selecionar:hover {
+  background-color: #c65383;
+  border-color: #c65383;
+  color: #ffffff;
+}
+
+.minha-conta .pet-card-botao-desselecionar {
+  background-color: #fff3f7;
+  color: #a43f6b;
+  border: 1px solid #eac0d0;
+}
+
+.minha-conta .pet-card-botao-desselecionar:hover {
+  background-color: #f8e0ea;
+  color: #923458;
+  border-color: #c65383;
+}
+
+.minha-conta .pet-card-botao-selecionar:focus-visible {
+  outline: 3px solid #c65383;
+  outline-offset: 3px;
+}
+
+.minha-conta .pet-card-status-ativo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  color: #a43f6b;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .minha-conta {
+    padding-top: 28px !important;
+    padding-bottom: 28px !important;
+  }
+
+  .minha-conta .cadastro-pet-cabecalho {
+    margin-bottom: 24px;
+  }
+
+  .minha-conta .cadastro-pet-cabecalho h1 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+  }
+
+  .minha-conta .cadastro-pet-cabecalho p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .minha-conta .formulario-pet {
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+
+  .minha-conta .formulario-pet h2 {
+    font-size: 1.2rem;
+    padding-bottom: 12px;
+  }
+
+  .minha-conta .btn-primary {
+    width: auto;
+    max-width: 100%;
+  }
+
+  .minha-conta .btn-acao-conta {
+    width: auto;
+    min-height: 40px;
+    padding: 9px 14px;
+    font-size: 13px;
+    border-radius: 10px;
+  }
+
+  .minha-conta .tutor-perfil-layout {
+    gap: 18px;
+  }
+
+  .minha-conta .tutor-foto-edicao {
+    gap: 18px;
+    padding: 16px;
+  }
+
+  .minha-conta .pet-card-perfil {
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 600px) {
+  .minha-conta {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .minha-conta .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .minha-conta .cadastro-pet-cabecalho {
+    margin-bottom: 20px;
+  }
+
+  .minha-conta .cadastro-pet-cabecalho h1 {
+    font-size: 1.65rem;
+    margin-bottom: 6px;
+  }
+
+  .minha-conta .cadastro-pet-cabecalho p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 0;
+  }
+
+  .minha-conta .formulario-pet {
+    padding: 20px 16px;
+    border-radius: 14px;
+  }
+
+  .minha-conta .formulario-pet h2 {
+    font-size: 18px;
+    padding-bottom: 10px;
+  }
+
+  .minha-conta .cadastro-pet-conteudo > section.formulario-pet:first-of-type {
+    padding: 18px 16px;
+    border-radius: 14px;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    > div:first-child {
+    margin-bottom: 16px !important;
+    gap: 10px;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    h2 {
+    font-size: 18px;
+    margin-bottom: 0;
+    padding-bottom: 10px;
+  }
+
+  .minha-conta .cadastro-pet-conteudo > section.formulario-pet:first-of-type p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 9px;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    .form-label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    .form-control {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    .mb-3 {
+    margin-bottom: 12px !important;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    .btn-acao-conta {
+    width: auto;
+    min-height: 38px;
+    padding: 8px 12px;
+    font-size: 13px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+
+  .minha-conta .tutor-perfil-layout {
+    display: flex;
+    flex-wrap: nowrap !important;
+    align-items: flex-start;
+    gap: 14px !important;
+  }
+
+  .minha-conta .tutor-avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .minha-conta .tutor-perfil-informacoes {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .minha-conta .tutor-perfil-informacoes p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  .minha-conta .tutor-foto-edicao {
+    flex-direction: column;
+    align-items: center !important;
+    gap: 16px !important;
+    padding: 16px 12px;
+  }
+
+  .minha-conta .tutor-foto-controles {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .minha-conta .tutor-foto-controles .form-label {
+    font-size: 13px;
+  }
+
+  .minha-conta .tutor-foto-controles small {
+    font-size: 11px;
+  }
+
+  .minha-conta .tutor-form-acoes,
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    form
+    > .d-flex {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    align-items: stretch;
+    width: 100%;
+    gap: 10px !important;
+  }
+
+  .minha-conta .tutor-form-acoes .btn,
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    form
+    > .d-flex
+    > .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 10px 8px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .minha-conta .pet-card-conteudo {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .minha-conta .pet-card-midia {
+    height: 145px;
+  }
+
+  .minha-conta .pet-card-identidade h3 {
+    font-size: 1.1rem;
+  }
+
+  .minha-conta .pet-card-botao-selecionar {
+    min-height: 42px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .minha-conta .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .minha-conta .formulario-pet {
+    padding: 16px 12px;
+  }
+
+  .minha-conta .cadastro-pet-conteudo > section.formulario-pet:first-of-type {
+    padding: 16px 12px;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    h2 {
+    font-size: 16px;
+  }
+
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    .btn-acao-conta {
+    font-size: 12px;
+    padding: 8px 10px;
+  }
+
+  .minha-conta .tutor-perfil-layout {
+    gap: 10px !important;
+  }
+
+  .minha-conta .tutor-perfil-informacoes p {
+    font-size: 12px;
+  }
+
+  .minha-conta .tutor-form-acoes,
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    form
+    > .d-flex {
+    gap: 8px !important;
+  }
+
+  .minha-conta .tutor-form-acoes .btn,
+  .minha-conta
+    .cadastro-pet-conteudo
+    > section.formulario-pet:first-of-type
+    form
+    > .d-flex
+    > .btn {
+    font-size: 12px;
+    padding: 8px 5px;
+  }
+
+  .minha-conta .pet-card-conteudo {
+    padding: 12px;
+  }
+
+  .minha-conta .pet-card-detalhes span {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .minha-conta .formulario-pet,
+  .minha-conta .btn-primary,
+  .minha-conta .btn-cancelar-tutor,
+  .minha-conta .pet-card-perfil,
+  .minha-conta .pet-card-botao-selecionar,
+  .minha-conta .tutor-foto-controles input[type="file"]::file-selector-button {
+    transition: none;
+  }
+}
