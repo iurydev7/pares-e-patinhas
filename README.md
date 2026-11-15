@@ -1,4 +1,4 @@
-# 🐾 Pares & Patinhas
+# 🐾 Pares & Patinhas 
 
 ## Sobre o projeto
 
