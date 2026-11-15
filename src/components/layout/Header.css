@@ -1,0 +1,592 @@
+.header-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 14px 28px;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--lavanda);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.logo-image {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.logo-title {
+  font-family: var(--fonte-titulo);
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--ameixa);
+  text-decoration: none;
+}
+
+.logo-title:hover {
+  color: var(--ameixa);
+}
+
+.logo-badge {
+  background-color: var(--menta);
+  color: var(--menta-escura);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: var(--raio-botao, 999px);
+}
+
+.header-nav {
+  display: flex;
+  background-color: #f3f4f6;
+  padding: 4px;
+  border-radius: var(--raio-botao, 999px);
+  gap: 4px;
+  justify-self: center;
+  white-space: nowrap;
+}
+
+.nav-item {
+  padding: 8px 22px;
+  border-radius: var(--raio-botao, 999px);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+  color: var(--ameixa);
+}
+
+.nav-item.active {
+  background-color: #ffffff;
+  color: var(--ameixa);
+  box-shadow: 0 2px 6px rgba(42, 21, 64, 0.08);
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  min-width: 0;
+}
+
+.header-user .header-user-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.user-profile {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  background-color: var(--nevoa);
+  padding: 6px 16px;
+  border-radius: var(--raio-botao, 999px);
+  border: 1px solid var(--lavanda);
+  transition: all 0.2s ease;
+}
+
+.user-profile:hover {
+  background-color: var(--lavanda);
+}
+
+.avatar-placeholder {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: var(--manteiga);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ameixa);
+}
+
+.header-user .user-profile-botao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background-color: #fff3f8;
+  border: 1px solid #e8bdcf;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.header-user .user-profile-botao .avatar-placeholder {
+  width: 26px;
+  height: 26px;
+  background-color: #f8dce8;
+  font-size: 13px;
+}
+
+.header-user .user-profile-botao .user-name {
+  color: #963c60;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.header-user .user-profile-botao:hover {
+  background-color: #f8dce8;
+  border-color: #c65383;
+  transform: translateY(-1px);
+}
+
+.header-user .pet-ativo-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 115px;
+  min-height: 28px;
+  padding: 5px 9px;
+  background-color: #c65383;
+  color: #ffffff;
+  border: 1px solid #c65383;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.header-user .pet-ativo-chip-nome {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-user .pet-ativo-chip:hover {
+  background-color: #aa3d6a;
+  border-color: #aa3d6a;
+  color: #ffffff;
+}
+
+.header-user .btn-logout {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.btn-logout,
+.header-container > div[style*="position: fixed"] button {
+  background-image: linear-gradient(
+    110deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.7),
+    transparent 60%
+  );
+  background-size: 300% 100%;
+  background-position: 100%;
+  transition: background-position 0.7s ease;
+}
+
+.btn-logout:hover,
+.header-container > div[style*="position: fixed"] button:hover {
+  background-position: 0;
+}
+
+.header-user a:focus-visible,
+.header-user button:focus-visible,
+.header-nav a:focus-visible {
+  outline: 3px solid #c65383;
+  outline-offset: 3px;
+}
+
+@media (max-width: 1200px) {
+  .header-container {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo user"
+      "nav nav";
+    gap: 10px 16px;
+  }
+
+  .header-logo {
+    grid-area: logo;
+  }
+
+  .header-nav {
+    grid-area: nav;
+    justify-self: center;
+    max-width: 100%;
+  }
+
+  .header-user {
+    grid-area: user;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 900px) {
+  .header-container {
+    padding: 12px 20px;
+  }
+
+  .header-logo {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 2px;
+    align-items: center;
+  }
+
+  .logo-image {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 56px;
+    height: 56px;
+  }
+
+  .logo-title {
+    grid-column: 2;
+    grid-row: 1;
+    font-size: 1.15rem;
+    line-height: 1.2;
+  }
+
+  .logo-badge {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    padding: 3px 9px;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo user"
+      "nav nav";
+    padding: 10px 14px 12px;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .header-container.header-logado,
+  .header-container:has(.header-user-actions) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "logo"
+      "user"
+      "nav";
+  }
+
+  .header-logo {
+    grid-area: logo;
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+    row-gap: 2px;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    justify-self: stretch;
+  }
+
+  .logo-image {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 46px;
+    height: 46px;
+  }
+
+  .logo-title {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .logo-badge {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+    max-width: 100%;
+    padding: 2px 8px;
+    font-size: 0.62rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-nav {
+    grid-area: nav;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 4px;
+    gap: 4px;
+    justify-self: stretch;
+    border-radius: 999px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 38px;
+    padding: 7px 4px;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .header-user {
+    grid-area: user;
+    min-width: 0;
+    justify-self: end;
+  }
+
+  .header-container:not(:has(.header-user-actions)) .header-user,
+  .header-container.header-visitante .header-user {
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  .header-user > .user-profile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 42px;
+    padding: 8px 12px;
+    background-color: #fff3f8;
+    border: 1px solid #e8bdcf;
+    border-radius: 12px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .header-user > .user-profile:hover {
+    background-color: #f8dce8;
+    border-color: #c65383;
+  }
+
+  .header-user > .user-profile .avatar-placeholder {
+    width: 22px;
+    height: 22px;
+    background-color: #f8dce8;
+    font-size: 11px;
+  }
+
+  .header-user > .user-profile .user-name {
+    color: #963c60;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .header-container:has(.header-user-actions) .header-user,
+  .header-container.header-logado .header-user {
+    width: 100%;
+    min-width: 0;
+    justify-self: stretch;
+  }
+
+  .header-user .header-user-actions {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+    gap: 8px;
+  }
+
+  .header-user .header-user-actions > * {
+    flex: 1 1 0;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .header-user .pet-ativo-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 6px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.2;
+    gap: 5px;
+    overflow: hidden;
+  }
+
+  .header-user .pet-ativo-chip-nome {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .header-user .user-profile-botao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 6px;
+    border-radius: 12px;
+    gap: 5px;
+  }
+
+  .header-user .user-profile-botao .avatar-placeholder {
+    display: none;
+  }
+
+  .header-user .user-profile-botao .user-name {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .header-user .btn-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 0;
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 6px !important;
+    border-radius: 12px !important;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .header-container {
+    padding-left: 10px;
+    padding-right: 10px;
+    gap: 8px;
+  }
+
+  .header-logo {
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: 6px;
+  }
+
+  .logo-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  .logo-title {
+    font-size: 0.9rem;
+  }
+
+  .logo-badge {
+    font-size: 0.55rem;
+    padding: 2px 5px;
+  }
+
+  .header-user > .user-profile {
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .header-user > .user-profile .user-name {
+    font-size: 12px;
+  }
+
+  .header-user .header-user-actions {
+    gap: 6px;
+  }
+
+  .header-user .pet-ativo-chip {
+    font-size: 11px;
+    gap: 3px;
+    padding: 8px 4px;
+  }
+
+  .header-user .user-profile-botao {
+    padding: 8px 4px;
+  }
+
+  .header-user .user-profile-botao .user-name {
+    font-size: 11px;
+  }
+
+  .header-user .btn-logout {
+    font-size: 12px;
+    padding: 8px 4px !important;
+  }
+
+  .nav-item {
+    font-size: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header-container a,
+  .header-container button {
+    transition: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-container.header-logado .header-logo,
+  .header-container:has(.header-user-actions) .header-logo {
+    width: max-content;
+    max-width: 100%;
+    justify-self: center;
+    grid-template-columns: 46px max-content;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .header-container.header-logado .header-logo,
+  .header-container:has(.header-user-actions) .header-logo {
+    grid-template-columns: 40px max-content;
+  }
+}

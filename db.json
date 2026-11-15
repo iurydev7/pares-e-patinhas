@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Carlinhos de Jesus",
+      "email": "carlinhos.jesus@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "2",
+      "name": "Sulamita das cruzes",
+      "email": "susu.gata@gmail.com",
+      "password": "1234567"
+    },
+    {
+      "id": "3",
+      "name": "Andromeda Costa",
+      "email": "andinhocosta@gmail.com",
+      "password": "12345678"
+    }
+  ]
+}
