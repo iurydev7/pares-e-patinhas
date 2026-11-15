@@ -1,5 +1,6 @@
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import { usePetAtivo } from "../context/usePetAtivo";
 import LoginHero from "../components/login/LoginHero";
 import AuthTabs from "../components/login/AuthTabs";
 import "../components/login/login.css";
@@ -7,19 +8,9 @@ import petsLogin from "../assets/pets-login.png";
 
 function Login() {
   const { user, login, cadastrar } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { petAtivo } = usePetAtivo();
 
-  const origem = location.state?.from;
-
-  const destino =
-    origem?.pathname === "/farejar" || origem?.pathname === "/meu-pet"
-      ? origem.pathname + (origem.search || "")
-      : "/meu-pet";
-
-  function redirecionarAposLogin() {
-    navigate(destino, { replace: true });
-  }
+  const destino = petAtivo ? "/farejar" : "/minha-conta";
 
   if (user) {
     return <Navigate to={destino} replace />;
@@ -33,21 +24,22 @@ function Login() {
         <AuthTabs
           onLogin={login}
           onCadastrar={cadastrar}
-          onSucesso={redirecionarAposLogin}
+          onSucesso={() => {}}
         />
       </main>
-    <div className="login-patinhas" aria-hidden>
-      <span className="patinha patinha-1">🐾</span>
-      <span className="patinha patinha-2">🐾</span>
-      <span className="patinha patinha-3">🐾</span>
-      <span className="patinha patinha-4">🐾</span>
-      <span className="patinha patinha-5">🐾</span>
-      <span className="patinha patinha-6">🐾</span>
-    </div>
+
+      <div className="login-patinhas" aria-hidden="true">
+        <span className="patinha patinha-1">🐾</span>
+        <span className="patinha patinha-2">🐾</span>
+        <span className="patinha patinha-3">🐾</span>
+        <span className="patinha patinha-4">🐾</span>
+        <span className="patinha patinha-5">🐾</span>
+        <span className="patinha patinha-6">🐾</span>
+      </div>
 
       <img
         src={petsLogin}
-        alt="foto de pets"
+        alt="Foto de pets"
         aria-hidden="true"
         className="login-pets-decoracao"
       />
