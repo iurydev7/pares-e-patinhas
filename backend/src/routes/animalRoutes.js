@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const authMiddleware = require("../middlewares/authMiddlewares");
 
 const router = Router();
 
@@ -10,14 +11,14 @@ const {
   excluirAnimal,
 } = require("../controllers/animalController");
 
-router.post("/", cadastrarAnimal);
+router.post("/", authMiddleware, cadastrarAnimal);
 
 router.get("/", listarAnimais);
 
 router.get("/:id", buscarAnimalPorId);
 
-router.put("/:id", atualizarAnimal);
+router.put("/:id", authMiddleware, atualizarAnimal);
 
-router.delete("/:id", excluirAnimal);
+router.delete("/:id", authMiddleware, excluirAnimal);
 
 module.exports = router;
