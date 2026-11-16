@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import FormField from './FormField'
+import VerificarEmailForm from './VerificarEmailForm'
 
-function LoginForm({ onLogin, onSucesso }) {
+function LoginForm({ onLogin, onVerificar, onReenviar, onSucesso }) {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [erro, setErro] = useState('')
   const [enviando, setEnviando] = useState(false)
+  // Senha correta, mas e-mail ainda não confirmado: mostra a etapa do código.
+  const [emailAVerificar, setEmailAVerificar] = useState('')
 
   async function enviarFormulario(evento) {
     evento.preventDefault()
@@ -19,7 +22,9 @@ function LoginForm({ onLogin, onSucesso }) {
     setEnviando(true)
     try {
       const deuCerto = await onLogin(email, senha)
-      if (deuCerto) {
+      if (deuCerto === 'verificar') {
+        setEmailAVerificar(email.trim().toLowerCase())
+      } else if (deuCerto) {
         onSucesso()
       } else {
         setErro('E-mail ou senha incorretos.')
@@ -29,6 +34,19 @@ function LoginForm({ onLogin, onSucesso }) {
     } finally {
       setEnviando(false)
     }
+  }
+
+  if (emailAVerificar) {
+    return (
+      <VerificarEmailForm
+        email={emailAVerificar}
+        onVerificar={onVerificar}
+        onReenviar={onReenviar}
+        onSucesso={onSucesso}
+        onVoltar={() => setEmailAVerificar('')}
+        reenviarAoAbrir
+      />
+    )
   }
 
   return (

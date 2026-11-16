@@ -14,7 +14,7 @@ async function register(req, res, next) {
 
     return res.status(201).json({
       success: true,
-      message: "Tutor cadastrado com sucesso.",
+      message: "Cadastro criado. Enviamos um código de verificação para o seu e-mail.",
       ...resultado,
     });
   } catch (error) {
