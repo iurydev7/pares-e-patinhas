@@ -10,7 +10,8 @@ import "../components/login/login.css";
 import petsLogin from "../assets/pets-login.png";
 
 function Login() {
-  const { user, login, cadastrar, verificando } = useAuth();
+  const { user, login, cadastrar, verificarEmail, reenviarCodigo, verificando } =
+    useAuth();
   const { petAtivo } = usePetAtivo();
 
   const navigate = useNavigate();
@@ -59,6 +60,8 @@ function Login() {
         <AuthTabs
           onLogin={login}
           onCadastrar={cadastrar}
+          onVerificar={verificarEmail}
+          onReenviar={reenviarCodigo}
           onSucesso={redirecionarAposLogin}
         />
       </main>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import LoginForm from './LoginForm'
 import CadastroForm from './CadastroForm'
 
-function AuthTabs({ onLogin, onCadastrar, onSucesso }) {
+function AuthTabs({ onLogin, onCadastrar, onVerificar, onReenviar, onSucesso }) {
   const [aba, setAba] = useState('entrar')
 
   return (
@@ -29,9 +29,19 @@ function AuthTabs({ onLogin, onCadastrar, onSucesso }) {
       </div>
 
       {aba === 'entrar' ? (
-        <LoginForm onLogin={onLogin} onSucesso={onSucesso} />
+        <LoginForm
+          onLogin={onLogin}
+          onVerificar={onVerificar}
+          onReenviar={onReenviar}
+          onSucesso={onSucesso}
+        />
       ) : (
-        <CadastroForm onCadastrar={onCadastrar} onSucesso={onSucesso} />
+        <CadastroForm
+          onCadastrar={onCadastrar}
+          onVerificar={onVerificar}
+          onReenviar={onReenviar}
+          onSucesso={onSucesso}
+        />
       )}
     </div>
   )
