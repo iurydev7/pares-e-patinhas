@@ -347,6 +347,62 @@
   color: var(--lp-goiaba);
 }
 
+.login-form__aviso {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--lp-ameixa);
+}
+
+/* Requisitos da senha, marcados conforme o usuário digita. */
+.senha-regras {
+  list-style: none;
+  margin: -6px 0 14px;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--lp-texto-suave);
+}
+
+.senha-regras__item--ok {
+  color: #1f7a4d;
+  font-weight: 600;
+}
+
+.form-field__input--codigo {
+  height: 48px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 8px;
+  text-align: center;
+}
+
+.login-form__acoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.login-form__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lp-goiaba);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login-form__link:disabled {
+  color: var(--lp-texto-suave);
+  text-decoration: none;
+  cursor: default;
+}
+
 .login-form__botao {
   width: 100%;
   height: 41px;

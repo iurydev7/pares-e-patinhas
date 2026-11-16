@@ -1,10 +1,17 @@
 require("dotenv").config();
 
+// DB_SSL_REJECT_UNAUTHORIZED=false desliga a validação do certificado do banco.
+// Use só no seu computador, se a rede/antivírus interferir na conexão. Nunca em produção.
+const validarCertificado =
+  process.env.DB_SSL_REJECT_UNAUTHORIZED !== "false" ||
+  process.env.NODE_ENV === "production";
+
 const sslOptions =
   process.env.DB_SSL === "false" && process.env.NODE_ENV !== "production"
     ? undefined
     : {
         minVersion: "TLSv1.2",
+        rejectUnauthorized: validarCertificado,
         ...(process.env.DB_SSL_CA
           ? { ca: process.env.DB_SSL_CA.replace(/\\n/g, "\n") }
           : {}),

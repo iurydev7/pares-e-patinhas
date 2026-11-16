@@ -1,14 +1,16 @@
-
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { Tutor } = require("../../models");
+const erroHttp = require("../utils/erroHttp");
+const { senhaForte, MENSAGEM_SENHA_FORTE } = require("../utils/senha");
+const { emitirCodigo, exigirIntervaloDeReenvio } = require("./verificacaoService");
 
-function erroHttp(mensagem, statusCode) {
-  const erro = new Error(mensagem);
-  erro.statusCode = statusCode;
-  return erro;
-}
-
+/**
+ * Cria o tutor como NÃO verificado e envia o código de 6 dígitos para o e-mail informado.
+ * A sessão (token) só é entregue depois da confirmação em POST /api/auth/verify-email.
+ *
+ * Se o e-mail já existe mas nunca foi confirmado, o cadastro é refeito: quem digitou
+ * o e-mail de outra pessoa não consegue "prender" o endereço.
+ */
 async function cadastrarTutor({ nome, email, senha }) {
   if (
     typeof nome !== "string" ||
@@ -32,55 +34,50 @@ async function cadastrarTutor({ nome, email, senha }) {
     throw erroHttp("Informe um e-mail válido.", 400);
   }
 
-  if (senha.length < 8 || Buffer.byteLength(senha, "utf8") > 72) {
-    throw erroHttp(
-      "A senha deve ter pelo menos 8 caracteres e até 72 bytes.",
-      400
-    );
+  if (!senhaForte(senha)) {
+    throw erroHttp(MENSAGEM_SENHA_FORTE, 400, "SENHA_FRACA");
   }
 
   if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET não configurado.");
   }
 
-  const existente = await Tutor.findOne({
+  let tutor = await Tutor.findOne({
     where: { email: emailLimpo },
-    attributes: ["id"],
   });
 
-  if (existente) {
-    throw erroHttp("Este e-mail já está cadastrado.", 409);
+  if (tutor && tutor.emailVerificado) {
+    throw erroHttp("Este e-mail já está cadastrado.", 409, "EMAIL_DUPLICADO");
+  }
+
+  if (tutor) {
+    exigirIntervaloDeReenvio(tutor);
   }
 
   const senhaHash = await bcrypt.hash(senha, 12);
 
-  let tutor;
+  if (tutor) {
+    await tutor.update({ nome: nomeLimpo, senhaHash });
+  } else {
+    try {
+      tutor = await Tutor.create({
+        nome: nomeLimpo,
+        email: emailLimpo,
+        senhaHash,
+      });
+    } catch (erro) {
+      if (erro.name === "SequelizeUniqueConstraintError") {
+        throw erroHttp("Este e-mail já está cadastrado.", 409, "EMAIL_DUPLICADO");
+      }
 
-  try {
-    tutor = await Tutor.create({
-      nome: nomeLimpo,
-      email: emailLimpo,
-      senhaHash,
-    });
-  } catch (erro) {
-    if (erro.name === "SequelizeUniqueConstraintError") {
-      throw erroHttp("Este e-mail já está cadastrado.", 409);
+      throw erro;
     }
-
-    throw erro;
   }
 
-  const token = jwt.sign(
-    { sub: String(tutor.id) },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN || "2h",
-      algorithm: "HS256",
-    }
-  );
+  await emitirCodigo(tutor);
 
   return {
-    token,
+    verificacaoPendente: true,
     tutor: {
       id: tutor.id,
       nome: tutor.nome,

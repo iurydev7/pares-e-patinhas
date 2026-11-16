@@ -43,6 +43,34 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(2),
         allowNull: true,
       },
+
+      // Verificação de e-mail: o código nunca é salvo em texto puro, só o HMAC dele.
+      emailVerificado: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+
+      codigoVerificacaoHash: {
+        type: DataTypes.STRING(64),
+        allowNull: true,
+      },
+
+      codigoExpiraEm: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+
+      codigoTentativas: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+
+      codigoEnviadoEm: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       sequelize,
