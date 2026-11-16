@@ -55,7 +55,7 @@ function validarCadastroAnimal(body) {
 
     let idadeMeses = 0;
     if (!vazio(dados.idadeMeses)) {
-        idadeMeses = paraInteiro(dados.idadeMeses);
+        idadeMeses = parInteiro(dados.idadeMeses);
     if (Number.isNaN(idadeMeses) || idadeMeses < 0 || idadeMeses > 11) {
         erros.push("idadeMeses deve ser um número inteiro entre 0 e 11");
         }

@@ -1,16 +1,14 @@
 const { Animal } = require('../../models');
+const animalService = require("../services/animalService");
 
-const cadastrarAnimal = async (req, res) => {
+const cadastrarAnimal = async (req, res, next) => {
     try {
-        const novoAnimal = await Animal.create(req.body);
+        const animal = await animalService.cadastrarAnimal(req.auth.tutorId, req.body);
 
-        return res.status(201).json(novoAnimal);
+        return res.status(201).json(animal);
 
-    } catch (error) {
-        return res.status(500).json({
-            mensagem: 'Erro ao cadastrar animal',
-            erro: error.message,
-        });
+    } catch (erro) {
+        return next(erro);
     }
 };
 

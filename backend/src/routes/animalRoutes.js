@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const authMiddleware = require("../middlewares/authMiddlewares");
 
 const router = Router();
 
@@ -10,7 +11,7 @@ const {
   excluirAnimal,
 } = require("../controllers/animalController");
 
-router.post("/", cadastrarAnimal);
+router.post("/", authMiddleware, cadastrarAnimal);
 
 router.get("/", listarAnimais);
 
