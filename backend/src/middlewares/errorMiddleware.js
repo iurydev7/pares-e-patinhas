@@ -14,9 +14,16 @@ function errorMiddleware(erro, req, res, next) {
       ? "Não foi possível concluir sua solicitação."
       : erro.message || "Não foi possível concluir sua solicitação.";
 
+  // `code` é um identificador estável para o frontend (ex.: EMAIL_NAO_VERIFICADO).
+  const code =
+    statusCode !== 500 && typeof erro.codigoErro === "string"
+      ? erro.codigoErro
+      : undefined;
+
   return res.status(statusCode).json({
     success: false,
     message,
+    ...(code ? { code } : {}),
   });
 }
 

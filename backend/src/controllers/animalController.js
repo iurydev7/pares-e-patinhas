@@ -3,7 +3,32 @@ const animalService = require("../services/animalService");
 
 const cadastrarAnimal = async (req, res, next) => {
     try {
-        const animal = await animalService.cadastrarAnimal(req.auth.tutorId, req.body);
+        const {
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+        } = req.body;
+
+        const novoAnimal = await Animal.create({
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+            tutorId: req.auth.tutorId,
+        });
 
         return res.status(201).json(animal);
 
@@ -82,9 +107,34 @@ const buscarAnimalPorId = async (req, res) => {
 
 const atualizarAnimal = async (req, res) => {
     try {
-        const [atualizado] = await Animal.update(req.body, {
+        const {
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+        } = req.body;
+
+        const [atualizado] = await Animal.update({
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+        }, {
             where: {
                 id: req.params.id,
+                tutorId: req.auth.tutorId,
             },
         });
 
@@ -94,7 +144,12 @@ const atualizarAnimal = async (req, res) => {
             });
         }
 
-        const animal = await Animal.findByPk(req.params.id);
+        const animal = await Animal.findOne({
+            where: {
+                id: req.params.id,
+                tutorId: req.auth.tutorId,
+            },
+        });
 
         return res.status(200).json(animal);
 
@@ -112,6 +167,7 @@ const excluirAnimal = async (req, res) => {
         const excluido = await Animal.destroy({
             where: {
                 id: req.params.id,
+                tutorId: req.auth.tutorId,
             },
         });
 

@@ -1,13 +1,17 @@
 import { useState } from "react";
 import FormField from "./FormField";
+import VerificarEmailForm from "./VerificarEmailForm";
+import { REGRAS_SENHA, senhaForte } from "../../utils/senha";
 
-function CadastroForm({ onCadastrar, onSucesso }) {
+function CadastroForm({ onCadastrar, onVerificar, onReenviar, onSucesso }) {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmar, setConfirmar] = useState("");
   const [erro, setErro] = useState("");
   const [enviando, setEnviando] = useState(false);
+  // Preenchido depois que a conta é criada: troca o formulário pela etapa do código.
+  const [emailAVerificar, setEmailAVerificar] = useState("");
 
   async function enviarFormulario(evento) {
     evento.preventDefault();
@@ -21,8 +25,8 @@ function CadastroForm({ onCadastrar, onSucesso }) {
       setErro("Digite um e-mail válido.");
       return;
     }
-    if (senha.length < 8) {
-      setErro("A senha precisa ter pelo menos 8 caracteres.");
+    if (!senhaForte(senha)) {
+      setErro("A senha ainda não atende a todos os requisitos abaixo do campo.");
       return;
     }
     if (senha !== confirmar) {
@@ -34,17 +38,31 @@ function CadastroForm({ onCadastrar, onSucesso }) {
     try {
       const criou = await onCadastrar(nome, email, senha);
       if (criou) {
-        onSucesso();
+        // Conta criada: falta confirmar o código enviado por e-mail.
+        setEmailAVerificar(email.trim().toLowerCase());
       } else {
         setErro("Este e-mail já está cadastrado.");
       }
-    } catch {
+    } catch (falha) {
       setErro(
-        "Não foi possível criar a conta agora. Tente novamente em instantes.",
+        falha?.response?.data?.message ||
+          "Não foi possível criar a conta agora. Tente novamente em instantes.",
       );
     } finally {
       setEnviando(false);
     }
+  }
+
+  if (emailAVerificar) {
+    return (
+      <VerificarEmailForm
+        email={emailAVerificar}
+        onVerificar={onVerificar}
+        onReenviar={onReenviar}
+        onSucesso={onSucesso}
+        onVoltar={() => setEmailAVerificar("")}
+      />
+    );
   }
 
   return (
@@ -73,8 +91,28 @@ function CadastroForm({ onCadastrar, onSucesso }) {
         type="password"
         value={senha}
         onChange={(evento) => setSenha(evento.target.value)}
-        placeholder="Mínimo de 8 caracteres"
+        placeholder="Crie uma senha forte"
       />
+      <ul className="senha-regras" aria-label="Requisitos da senha">
+        {REGRAS_SENHA.map((regra) => {
+          const ok = regra.teste(senha);
+          return (
+            <li
+              key={regra.id}
+              className={
+                ok
+                  ? "senha-regras__item senha-regras__item--ok"
+                  : "senha-regras__item"
+              }
+            >
+              <span aria-hidden="true">{ok ? "✓" : "○"}</span> {regra.rotulo}
+              <span className="visually-hidden">
+                {ok ? " (atendido)" : " (pendente)"}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
       <FormField
         id="cadastro-confirmar"
         label="Confirmar senha"

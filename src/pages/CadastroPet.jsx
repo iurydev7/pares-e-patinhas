@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import api from "../services/api";
+import { useAuth } from "../context/useAuth";
 import { usePetAtivo } from "../context/usePetAtivo";
 import "./CadastroPet.css";
 
@@ -91,7 +93,13 @@ async function prepararFoto(arquivo) {
   }
 }
 
-function FormularioPet({ petId, petOriginal, adicionarPet, atualizarPet }) {
+function FormularioPet({
+  petId,
+  petOriginal,
+  usuarioId,
+  adicionarPet,
+  atualizarPet,
+}) {
   const navigate = useNavigate();
   const emEdicao = Boolean(petId);
 
@@ -198,14 +206,25 @@ function FormularioPet({ petId, petOriginal, adicionarPet, atualizarPet }) {
 
     const imagensOrdenadas = fotos.map((foto) => foto.src);
 
+    const idadeAnos = Number(formulario.get("idadeAnos"));
+    const idadeMeses = Number(formulario.get("idadeMeses") || 0);
+
     const dadosPet = {
       nome: String(formulario.get("nome") || "").trim(),
 
+      especie: String(formulario.get("especie") || ""),
+
       raca: String(formulario.get("raca") || "").trim(),
 
-      idade: Number(formulario.get("idade")),
+      idade: idadeAnos,
+
+      idadeAnos,
+
+      idadeMeses,
 
       genero: String(formulario.get("genero") || ""),
+
+      sexo: String(formulario.get("genero") || ""),
 
       porte: String(formulario.get("porte") || ""),
 
@@ -223,21 +242,53 @@ function FormularioPet({ petId, petOriginal, adicionarPet, atualizarPet }) {
     };
 
     try {
-      if (emEdicao) {
-        atualizarPet(petId, dadosPet);
+      if (!usuarioId) {
+        throw new Error("Faça login novamente para cadastrar um pet.");
+      }
 
-        navigate(`/meu-pet/${encodeURIComponent(String(petId))}`);
+      const dadosBanco = {
+        nome: dadosPet.nome,
+        especie: dadosPet.especie,
+        sexo: dadosPet.sexo,
+        raca: dadosPet.raca || null,
+        idadeAnos: dadosPet.idadeAnos,
+        idadeMeses: dadosPet.idadeMeses,
+        porte: dadosPet.porte,
+        descricao: dadosPet.descricao || null,
+        cidade: dadosPet.cidade || null,
+        estado: dadosPet.estado || null,
+      };
+
+      if (emEdicao) {
+        const idBanco = Number(petId);
+        const salvoNoBanco =
+          Number.isSafeInteger(idBanco) && idBanco > 0
+            ? (await api.put(`/animals/${idBanco}`, dadosBanco)).data
+            : (await api.post("/animals", dadosBanco)).data;
+
+        atualizarPet(petId, {
+          ...dadosPet,
+          id: salvoNoBanco.id,
+        });
+
+        navigate(`/meu-pet/${encodeURIComponent(String(salvoNoBanco.id))}`);
       } else {
-        adicionarPet(dadosPet);
+        const salvoNoBanco = (await api.post("/animals", dadosBanco)).data;
+        adicionarPet({
+          ...dadosPet,
+          id: salvoNoBanco.id,
+        });
         navigate("/minha-conta");
       }
     } catch (falha) {
       setErro(
         falha?.name === "QuotaExceededError"
           ? "O armazenamento do navegador está cheio. Tente usar fotos menores."
-          : falha instanceof Error
-            ? falha.message
-            : "Não foi possível salvar o pet.",
+          : falha?.response?.data?.mensagem ||
+              falha?.response?.data?.message ||
+              (falha instanceof Error
+                ? falha.message
+                : "Não foi possível salvar o pet."),
       );
     } finally {
       setSalvando(false);
@@ -292,6 +343,30 @@ function FormularioPet({ petId, petOriginal, adicionarPet, atualizarPet }) {
                 </div>
 
                 <div className="col-12 col-md-6">
+                  <label htmlFor="especie" className="form-label">
+                    Espécie
+                  </label>
+
+                  <select
+                    id="especie"
+                    name="especie"
+                    className="form-select"
+                    defaultValue={petOriginal?.especie || ""}
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecione
+                    </option>
+
+                    <option value="Cachorro">Cachorro</option>
+
+                    <option value="Gato">Gato</option>
+
+                    <option value="Outro">Outro</option>
+                  </select>
+                </div>
+
+                <div className="col-12 col-md-6">
                   <label htmlFor="raca" className="form-label">
                     Raça
                   </label>
@@ -307,18 +382,36 @@ function FormularioPet({ petId, petOriginal, adicionarPet, atualizarPet }) {
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label htmlFor="idade" className="form-label">
+                  <label htmlFor="idadeAnos" className="form-label">
                     Idade (anos)
                   </label>
 
                   <input
-                    id="idade"
-                    name="idade"
+                    id="idadeAnos"
+                    name="idadeAnos"
                     type="number"
                     min="0"
                     className="form-control"
-                    defaultValue={petOriginal?.idade ?? ""}
+                    defaultValue={
+                      petOriginal?.idadeAnos ?? petOriginal?.idade ?? ""
+                    }
                     required
+                  />
+                </div>
+
+                <div className="col-12 col-md-6">
+                  <label htmlFor="idadeMeses" className="form-label">
+                    Idade (meses)
+                  </label>
+
+                  <input
+                    id="idadeMeses"
+                    name="idadeMeses"
+                    type="number"
+                    min="0"
+                    max="11"
+                    className="form-control"
+                    defaultValue={petOriginal?.idadeMeses ?? 0}
                   />
                 </div>
 
@@ -662,6 +755,7 @@ function FormularioPet({ petId, petOriginal, adicionarPet, atualizarPet }) {
 function CadastroPet() {
   const { petId } = useParams();
 
+  const { user } = useAuth();
   const { pets, adicionarPet, atualizarPet } = usePetAtivo();
 
   const petOriginal = petId
@@ -673,6 +767,7 @@ function CadastroPet() {
       key={petId || "novo"}
       petId={petId}
       petOriginal={petOriginal}
+      usuarioId={user?.id}
       adicionarPet={adicionarPet}
       atualizarPet={atualizarPet}
     />
