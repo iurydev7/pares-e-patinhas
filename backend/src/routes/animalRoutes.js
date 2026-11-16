@@ -1,5 +1,6 @@
 
 const { Router } = require("express");
+const authMiddleware = require("../middlewares/authMiddlewares");
 
 const router = Router();
 
@@ -212,7 +213,7 @@ const {
  *       500:
  *         description: Erro ao cadastrar animal.
  */
-router.post("/", cadastrarAnimal);
+router.post("/", authMiddleware, cadastrarAnimal);
 
 /**
  * @swagger
@@ -347,7 +348,7 @@ router.get("/:id", buscarAnimalPorId);
  *       500:
  *         description: Erro ao atualizar animal.
  */
-router.put("/:id", atualizarAnimal);
+router.put("/:id", authMiddleware, atualizarAnimal);
 
 /**
  * @swagger
@@ -374,6 +375,6 @@ router.put("/:id", atualizarAnimal);
  *       500:
  *         description: Erro ao excluir animal.
  */
-router.delete("/:id", excluirAnimal);
+router.delete("/:id", authMiddleware, excluirAnimal);
 
 module.exports = router;

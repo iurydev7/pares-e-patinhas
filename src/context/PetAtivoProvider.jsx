@@ -124,7 +124,7 @@ function SessaoPetAtivo({ children, tutorId }) {
       const atualizado = {
         ...original,
         ...alteracoes,
-        id: original.id,
+        id: alteracoes.id ?? original.id,
       };
 
       const lista = anterior.pets.map((pet) =>
@@ -133,9 +133,18 @@ function SessaoPetAtivo({ children, tutorId }) {
 
       gravarPets(tutorId, lista);
 
+      const petAtivoId =
+        anterior.petAtivoId === String(petId)
+          ? String(atualizado.id)
+          : anterior.petAtivoId;
+
+      if (petAtivoId !== anterior.petAtivoId) {
+        gravarPetAtivo(tutorId, petAtivoId);
+      }
+
       setEstado({
         pets: lista,
-        petAtivoId: anterior.petAtivoId,
+        petAtivoId,
       });
 
       return atualizado;
