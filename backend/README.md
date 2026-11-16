@@ -196,6 +196,8 @@ JWT_SECRET=defina_uma_chave_secreta_forte
 
 **Importante:** nunca compartilhe ou versione o arquivo `.env`. Cada integrante deve utilizar suas próprias credenciais.
 
+Em produção, a conexão MySQL usa TLS automaticamente. Para um banco local sem TLS, mantenha `DB_SSL=false` no `.env`; essa opção não desativa o TLS em produção. Se o provedor fornecer um certificado CA, configure-o em `DB_SSL_CA`. No Render, configure `DB_SSL=true` e não execute `db:create` durante cada build: o banco TiDB deve estar provisionado; execute `db:migrate` quando precisar aplicar alterações de esquema.
+
 ### 4. Criar o banco de dados
 
 Com o MySQL Server iniciado, execute:

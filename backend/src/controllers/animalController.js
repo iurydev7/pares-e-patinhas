@@ -1,8 +1,33 @@
-const { Animal } = require('../models');
+const { Animal } = require('../../models');
 
 const cadastrarAnimal = async (req, res) => {
     try {
-        const novoAnimal = await Animal.create(req.body);
+        const {
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+        } = req.body;
+
+        const novoAnimal = await Animal.create({
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+            tutorId: req.auth.tutorId,
+        });
 
         return res.status(201).json(novoAnimal);
 
@@ -16,9 +41,41 @@ const cadastrarAnimal = async (req, res) => {
 
 const listarAnimais = async (req, res) => {
     try {
-        const animais = await Animal.findAll();
+        const {
+            especie,
+            raca,
+            cidade,
+            estado,
+            page = 1,
+            limit = 10,
+        } = req.query;
 
-        return res.status(200).json(animais);
+        const filtros = {};
+
+        if (especie) filtros.especie = especie;
+        if (raca) filtros.raca = raca;
+        if (cidade) filtros.cidade = cidade;
+        if (estado) filtros.estado = estado;
+
+        const pagina = Math.max(1, parseInt(page, 10) || 1);
+        const limite = Math.min(100, Math.max(1, parseInt(limit, 10) || 10));
+
+        const offset = (pagina - 1) * limite;
+
+        const { count, rows } = await Animal.findAndCountAll({
+            where: filtros,
+            limit: limite,
+            offset: offset,
+            order: [['createdAt', 'DESC']],
+        });
+
+        return res.status(200).json({
+            total: count,
+            pagina: pagina,
+            limite: limite,
+            totalPaginas: Math.ceil(count / limite),
+            animais: rows,
+        });
 
     } catch (error) {
         return res.status(500).json({
@@ -52,9 +109,34 @@ const buscarAnimalPorId = async (req, res) => {
 
 const atualizarAnimal = async (req, res) => {
     try {
-        const [atualizado] = await Animal.update(req.body, {
+        const {
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+        } = req.body;
+
+        const [atualizado] = await Animal.update({
+            nome,
+            especie,
+            sexo,
+            raca,
+            idadeAnos,
+            idadeMeses,
+            porte,
+            descricao,
+            cidade,
+            estado,
+        }, {
             where: {
                 id: req.params.id,
+                tutorId: req.auth.tutorId,
             },
         });
 
@@ -64,7 +146,12 @@ const atualizarAnimal = async (req, res) => {
             });
         }
 
-        const animal = await Animal.findByPk(req.params.id);
+        const animal = await Animal.findOne({
+            where: {
+                id: req.params.id,
+                tutorId: req.auth.tutorId,
+            },
+        });
 
         return res.status(200).json(animal);
 
@@ -82,6 +169,7 @@ const excluirAnimal = async (req, res) => {
         const excluido = await Animal.destroy({
             where: {
                 id: req.params.id,
+                tutorId: req.auth.tutorId,
             },
         });
 

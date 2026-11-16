@@ -1,48 +1,49 @@
-import { useState } from 'react'
-import FormField from './FormField'
-
+import { useState } from "react";
+import FormField from "./FormField";
 
 function CadastroForm({ onCadastrar, onSucesso }) {
-  const [nome, setNome] = useState('')
-  const [email, setEmail] = useState('')
-  const [senha, setSenha] = useState('')
-  const [confirmar, setConfirmar] = useState('')
-  const [erro, setErro] = useState('')
-  const [enviando, setEnviando] = useState(false)
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmar, setConfirmar] = useState("");
+  const [erro, setErro] = useState("");
+  const [enviando, setEnviando] = useState(false);
 
   async function enviarFormulario(evento) {
-    evento.preventDefault()
-    setErro('')
+    evento.preventDefault();
+    setErro("");
 
     if (!nome.trim() || !email.trim() || !senha || !confirmar) {
-      setErro('Preencha todos os campos.')
-      return
+      setErro("Preencha todos os campos.");
+      return;
     }
-    if (!email.includes('@') || !email.includes('.')) {
-      setErro('Digite um e-mail válido.')
-      return
+    if (!email.includes("@") || !email.includes(".")) {
+      setErro("Digite um e-mail válido.");
+      return;
     }
-    if (senha.length < 6) {
-      setErro('A senha precisa ter pelo menos 6 caracteres.')
-      return
+    if (senha.length < 8) {
+      setErro("A senha precisa ter pelo menos 8 caracteres.");
+      return;
     }
     if (senha !== confirmar) {
-      setErro('As senhas não coincidem.')
-      return
+      setErro("As senhas não coincidem.");
+      return;
     }
 
-    setEnviando(true)
+    setEnviando(true);
     try {
-      const criou = await onCadastrar(nome, email, senha)
+      const criou = await onCadastrar(nome, email, senha);
       if (criou) {
-        onSucesso()
+        onSucesso();
       } else {
-        setErro('Este e-mail já está cadastrado.')
+        setErro("Este e-mail já está cadastrado.");
       }
     } catch {
-      setErro('Não foi possível criar a conta agora. Tente novamente em instantes.')
+      setErro(
+        "Não foi possível criar a conta agora. Tente novamente em instantes.",
+      );
     } finally {
-      setEnviando(false)
+      setEnviando(false);
     }
   }
 
@@ -72,7 +73,7 @@ function CadastroForm({ onCadastrar, onSucesso }) {
         type="password"
         value={senha}
         onChange={(evento) => setSenha(evento.target.value)}
-        placeholder="Mínimo de 6 caracteres"
+        placeholder="Mínimo de 8 caracteres"
       />
       <FormField
         id="cadastro-confirmar"
@@ -90,10 +91,10 @@ function CadastroForm({ onCadastrar, onSucesso }) {
       )}
 
       <button className="login-form__botao" type="submit" disabled={enviando}>
-        {enviando ? 'Criando conta...' : 'Criar conta'}
+        {enviando ? "Criando conta..." : "Criar conta"}
       </button>
     </form>
-  )
+  );
 }
 
-export default CadastroForm
+export default CadastroForm;

@@ -1,129 +1,219 @@
 
-import { useEffect, useState } from 'react'
-import api from '../services/api'
-import { AuthContext } from './AuthContext'
+import { useCallback, useEffect, useState } from "react";
+import api from "../services/api";
+import { AuthContext } from "./AuthContext";
 
-const CHAVE = 'pp_usuario'
-const TEMPO_SESSAO = 30 * 30 * 1000 
-function lerUsuarioSalvo() {
+const TOKEN_KEY = "pp_token";
+const CHAVE_ANTIGA = "pp_usuario";
+
+// Lê o horário de expiração informado no JWT
+function obterExpiracao(token) {
   try {
-    const salvo = localStorage.getItem(CHAVE)
+    const partePayload = token.split(".")[1];
 
-    if (!salvo) return null
+    if (!partePayload) return null;
 
-    const sessao = JSON.parse(salvo)
+    const base64 = partePayload
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
 
-    if (
-      !sessao.usuario ||
-      typeof sessao.expiraEm !== 'number' ||
-      Date.now() >= sessao.expiraEm
-    ) {
-      localStorage.removeItem(CHAVE)
-      return null
+    const payload = JSON.parse(atob(base64));
+
+    if (typeof payload.exp !== "number") {
+      return null;
     }
 
-    return sessao.usuario
+    // O JWT usa segundos; JavaScript usa milissegundos
+    return payload.exp * 1000;
   } catch {
-    localStorage.removeItem(CHAVE)
-    return null
+    return null;
   }
 }
 
+// Adapta o formato do backend ao frontend
+function formatarTutor(tutor) {
+  return {
+    id: tutor.id,
+    name: tutor.nome,
+    email: tutor.email,
+  };
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(lerUsuarioSalvo)
+  const [user, setUser] = useState(null);
+  const [verificando, setVerificando] = useState(true);
 
-  function logout() {
-    localStorage.removeItem(CHAVE)
-    setUser(null)
+  // Encerra a sessão local
+  const logout = useCallback(() => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(CHAVE_ANTIGA);
+    setUser(null);
+  }, []);
+
+  // Inicia a sessão após login ou cadastro
+  function iniciarSessao(token, tutor) {
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.removeItem(CHAVE_ANTIGA);
+
+    setUser(formatarTutor(tutor));
   }
 
-  function iniciarSessao(registro) {
-    const usuario = {
-      id: registro.id,
-      name: registro.name,
-      email: registro.email,
-    }
-
-    const sessao = {
-      usuario,
-      expiraEm: Date.now() + TEMPO_SESSAO,
-    }
-
-    localStorage.setItem(CHAVE, JSON.stringify(sessao))
-    setUser(usuario)
-  }
-
+  // Autentica um tutor existente
   async function login(email, senha) {
-    const resposta = await api.get('/users', {
-      params: { email: email.trim().toLowerCase() },
-    })
-
-    const encontrado = resposta.data[0]
-
-    if (!encontrado || encontrado.password !== senha) {
-      return false
-    }
-
-    iniciarSessao(encontrado)
-    return true
-  }
-
-  async function cadastrar(nome, email, senha) {
-    const emailLimpo = email.trim().toLowerCase()
-
-    const existentes = await api.get('/users', {
-      params: { email: emailLimpo },
-    })
-
-    if (existentes.data.length > 0) {
-      return false
-    }
-
-    const resposta = await api.post('/users', {
-      name: nome.trim(),
-      email: emailLimpo,
-      password: senha,
-    })
-
-    iniciarSessao(resposta.data)
-    return true
-  }
-
-  useEffect(() => {
-    if (!user) return
-
-    const sessaoSalva = localStorage.getItem(CHAVE)
-
-    if (!sessaoSalva) {
-      return
-    }
-
-    let expiraEm
-
     try {
-      expiraEm = JSON.parse(sessaoSalva).expiraEm
-    } catch {
-      return
+      const resposta = await api.post("/auth/login", {
+        email: email.trim().toLowerCase(),
+        senha,
+      });
+
+      const { token, tutor } = resposta.data;
+
+      if (!token || !tutor) {
+        throw new Error("Resposta de autenticação inválida.");
+      }
+
+      iniciarSessao(token, tutor);
+
+      return true;
+    } catch (error) {
+      if (error.response?.status === 401) {
+        return false;
+      }
+
+      throw error;
+    }
+  }
+
+  // Cadastra e autentica automaticamente
+  async function cadastrar(nome, email, senha) {
+    try {
+      const resposta = await api.post("/auth/register", {
+        nome: nome.trim(),
+        email: email.trim().toLowerCase(),
+        senha,
+      });
+
+      const { token, tutor } = resposta.data;
+
+      if (!token || !tutor) {
+        throw new Error("Resposta de cadastro inválida.");
+      }
+
+      iniciarSessao(token, tutor);
+
+      return true;
+    } catch (error) {
+      if (error.response?.status === 409) {
+        return false;
+      }
+
+      throw error;
+    }
+  }
+
+  // Valida a sessão ao iniciar ou atualizar a aplicação
+  useEffect(() => {
+    let ativo = true;
+
+    localStorage.removeItem(CHAVE_ANTIGA);
+
+    const token = localStorage.getItem(TOKEN_KEY);
+
+    if (!token) {
+      setVerificando(false);
+      return;
     }
 
-    const tempoRestante = expiraEm - Date.now()
+    const expiracao = obterExpiracao(token);
 
-    if (tempoRestante <= 0) {
-      return
+    if (!expiracao || Date.now() >= expiracao) {
+      logout();
+      setVerificando(false);
+      return;
     }
+
+    async function validarSessao() {
+      try {
+        const resposta = await api.get("/auth/me");
+
+        if (
+          !ativo ||
+          localStorage.getItem(TOKEN_KEY) !== token
+        ) {
+          return;
+        }
+
+        const tutor = resposta.data.tutor;
+
+        if (!tutor) {
+          throw new Error("Tutor não encontrado.");
+        }
+
+        setUser(formatarTutor(tutor));
+      } catch (error) {
+        if (
+          !ativo ||
+          localStorage.getItem(TOKEN_KEY) !== token
+        ) {
+          return;
+        }
+
+        // Token rejeitado pelo backend
+        if (
+          error.response?.status === 401 ||
+          error.response?.status === 403
+        ) {
+          logout();
+        } else {
+          // Não libera acesso se a validação falhar
+          setUser(null);
+        }
+      } finally {
+        if (ativo) {
+          setVerificando(false);
+        }
+      }
+    }
+
+    validarSessao();
+
+    return () => {
+      ativo = false;
+    };
+  }, [logout]);
+
+  // Encerra a sessão quando o JWT expirar
+  useEffect(() => {
+    if (!user) return;
+
+    const token = localStorage.getItem(TOKEN_KEY);
+    const expiracao = token ? obterExpiracao(token) : null;
+
+    if (!expiracao || Date.now() >= expiracao) {
+      logout();
+      return;
+    }
+
+    const tempoRestante = expiracao - Date.now();
 
     const timer = setTimeout(() => {
-      logout()
-    }, tempoRestante)
+      logout();
+    }, tempoRestante);
 
-    return () => clearTimeout(timer)
-  }, [user])
+    return () => clearTimeout(timer);
+  }, [user, logout]);
 
   return (
     <AuthContext.Provider
-      value={{ user, login, cadastrar, logout }}
+      value={{
+        user,
+        login,
+        cadastrar,
+        logout,
+        verificando,
+      }}
     >
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
