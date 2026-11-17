@@ -41,7 +41,11 @@ export async function buscarPetsDisponiveis(animalId) {
     params: { animalId, page: 1, limit: 100 },
   });
 
-  if (!Array.isArray(data?.animais)) {
+  if (
+    !Array.isArray(data?.animais) ||
+    !Number.isSafeInteger(data?.total) ||
+    data.total < 0
+  ) {
     throw new Error("A resposta da lista de pets para farejar é inválida.");
   }
 

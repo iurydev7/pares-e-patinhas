@@ -19,6 +19,7 @@ function Farejar() {
   const [descoberta, setDescoberta] = useState({
     animalId: null,
     animais: [],
+    total: 0,
     erro: "",
     carregando: true,
   });
@@ -43,6 +44,7 @@ function Farejar() {
           setDescoberta({
             animalId: petAtivo.id,
             animais: resultado.animais,
+            total: resultado.total,
             erro: "",
             carregando: false,
           });
@@ -53,6 +55,7 @@ function Farejar() {
           setDescoberta({
             animalId: petAtivo.id,
             animais: [],
+            total: 0,
             erro: mensagemDeErro(
               falha,
               "Não foi possível carregar os pets disponíveis.",
@@ -77,6 +80,7 @@ function Farejar() {
     setDescoberta({
       animalId,
       animais: [],
+      total: 0,
       erro: "",
       carregando: true,
     });
@@ -86,6 +90,7 @@ function Farejar() {
       setDescoberta({
         animalId,
         animais: resultado.animais,
+        total: resultado.total,
         erro: "",
         carregando: false,
       });
@@ -93,6 +98,7 @@ function Farejar() {
       setDescoberta({
         animalId,
         animais: [],
+        total: 0,
         erro: mensagemDeErro(
           falha,
           "Não foi possível carregar os próximos pets.",
@@ -124,6 +130,7 @@ function Farejar() {
       setDescoberta({
         animalId: petAtivo.id,
         animais: restantes,
+        total: Math.max(0, descoberta.total - 1),
         erro: "",
         carregando: false,
       });
@@ -200,23 +207,30 @@ function Farejar() {
                 ? "Não foi possível exibir os pets."
                 : "Não há novos pets disponíveis para farejar."}
             </p>
-            {erro && petAtivo?.id && (
+            {petAtivo?.id && (
               <button
                 type="button"
                 className="btn btn-outline-primary"
                 onClick={() => carregarMais(petAtivo.id)}
               >
-                Tentar novamente
+                {erro ? "Tentar novamente" : "Verificar novamente"}
               </button>
             )}
           </div>
         ) : (
-          <PetCard
-            pet={pet}
-            onCurtir={() => decidir("curtir")}
-            onPassar={() => decidir("passar")}
-            disabled={enviando}
-          />
+          <>
+            <p className="farejar-contagem" aria-live="polite">
+              {descoberta.total === 1
+                ? "1 pet disponível"
+                : `${descoberta.total} pets disponíveis`}
+            </p>
+            <PetCard
+              pet={pet}
+              onCurtir={() => decidir("curtir")}
+              onPassar={() => decidir("passar")}
+              disabled={enviando}
+            />
+          </>
         )}
       </section>
 

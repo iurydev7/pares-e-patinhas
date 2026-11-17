@@ -46,6 +46,15 @@
   margin: 0 auto;
 }
 
+.farejar-contagem {
+  width: 100%;
+  margin: 0 0 12px;
+  color: var(--texto-suave, #5b4a6e);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+}
+
 .farejar-centro > .pet-card,
 .farejar-centro > .farejar-vazio {
   width: 100%;
