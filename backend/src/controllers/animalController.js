@@ -1,5 +1,6 @@
 const { Animal, FotoAnimal, sequelize } = require("../../models");
 const { validarListaImagens } = require("../utils/validarImagem");
+const { validarCadastroAnimal } = require("../validators/animalValidator");
 
 const incluirFotos = {
     model: FotoAnimal,
@@ -39,32 +40,11 @@ async function salvarFotosAnimal(animalId, fotos, transaction) {
 
 const cadastrarAnimal = async (req, res, next) => {
     try {
-        const {
-            nome,
-            especie,
-            sexo,
-            raca,
-            idadeAnos,
-            idadeMeses,
-            porte,
-            descricao,
-            cidade,
-            estado,
-        } = req.body;
-
-        const fotos = validarListaImagens(req.body.fotos ?? []);
+        const dados = validarCadastroAnimal(req.body);
+        const fotos = validarListaImagens(req.body?.fotos ?? []);
         const novoAnimal = await sequelize.transaction(async (transaction) => {
             const animal = await Animal.create({
-                nome,
-                especie,
-                sexo,
-                raca,
-                idadeAnos,
-                idadeMeses,
-                porte,
-                descricao,
-                cidade,
-                estado,
+                ...dados,
                 tutorId: req.auth.tutorId,
             }, { transaction });
 
@@ -171,36 +151,12 @@ const buscarAnimalPorId = async (req, res) => {
 
 const atualizarAnimal = async (req, res, next) => {
     try {
-        const {
-            nome,
-            especie,
-            sexo,
-            raca,
-            idadeAnos,
-            idadeMeses,
-            porte,
-            descricao,
-            cidade,
-            estado,
-        } = req.body;
-
         const fotos =
             req.body?.fotos === undefined
                 ? undefined
                 : validarListaImagens(req.body.fotos);
         const animal = await sequelize.transaction(async (transaction) => {
-            const [atualizado] = await Animal.update({
-                nome,
-                especie,
-                sexo,
-                raca,
-                idadeAnos,
-                idadeMeses,
-                porte,
-                descricao,
-                cidade,
-                estado,
-            }, {
+            const animalAtual = await Animal.findOne({
                 where: {
                     id: req.params.id,
                     tutorId: req.auth.tutorId,
@@ -208,7 +164,13 @@ const atualizarAnimal = async (req, res, next) => {
                 transaction,
             });
 
-            if (!atualizado) return null;
+            if (!animalAtual) return null;
+
+            const dados = validarCadastroAnimal({
+                ...animalAtual.toJSON(),
+                ...(req.body || {}),
+            });
+            await animalAtual.update(dados, { transaction });
 
             await salvarFotosAnimal(req.params.id, fotos, transaction);
 
