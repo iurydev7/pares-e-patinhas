@@ -3,7 +3,38 @@ import { FaPaw } from "react-icons/fa";
 import { usePetAtivo } from "../context/usePetAtivo";
 
 function FarejarGuard() {
-  const { petAtivo, pets } = usePetAtivo();
+  const {
+    petAtivo,
+    pets,
+    carregandoPets,
+    erroCarregamentoPets,
+  } = usePetAtivo();
+
+  if (carregandoPets) {
+    return (
+      <main className="container py-5 text-center">
+        <p role="status">Carregando os pets da sua conta...</p>
+      </main>
+    );
+  }
+
+  if (erroCarregamentoPets) {
+    return (
+      <main className="container py-5 text-center">
+        <h1 className="h3 fw-bold">Não foi possível carregar seus pets</h1>
+        <p className="text-danger" role="alert">
+          {erroCarregamentoPets}
+        </p>
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => window.location.reload()}
+        >
+          Tentar novamente
+        </button>
+      </main>
+    );
+  }
 
   if (petAtivo) {
     return <Outlet />;

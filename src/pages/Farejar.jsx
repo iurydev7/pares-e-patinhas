@@ -1,67 +1,153 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import pets from "../data/pets";
 import PetCard from "../components/PetCard";
-import { useAuth } from "../context/useAuth";
 import { usePetAtivo } from "../context/usePetAtivo";
 import {
-  lerFilaFarejar,
-  removerDaFilaFarejar,
-} from "../services/farejarStorage";
+  buscarPetsDisponiveis,
+  mensagemDeErro,
+  registrarInteracao,
+} from "../services/farejarService";
 import "./Farejar.css";
 
-const matchIds = ["5"];
 const chatFuncionando = false;
 
 function Farejar() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const { user } = useAuth();
   const { petAtivo } = usePetAtivo();
 
-  const tutorId = String(user?.id ?? user?.email ?? "visitante");
-
-  const petAtivoId = petAtivo?.id;
-
-  const [fila, setFila] = useState(() => lerFilaFarejar(tutorId, petAtivoId));
-
-  const [match, setMatch] = useState(() => {
-    const idMatch = location.state?.matchPetId;
-
-    return pets.find((pet) => String(pet.id) === String(idMatch)) || null;
+  const [descoberta, setDescoberta] = useState({
+    animalId: null,
+    animais: [],
+    erro: "",
+    carregando: true,
   });
-
+  const [enviando, setEnviando] = useState(false);
+  const [match, setMatch] = useState(() =>
+    location.state?.match
+      ? { ...location.state.match, matchId: location.state.matchId }
+      : null,
+  );
   const [avisoChat, setAvisoChat] = useState(false);
-  const [erro, setErro] = useState("");
 
   useEffect(() => {
-    if (location.state?.matchPetId != null) {
-      navigate("/farejar", {
-        replace: true,
-        state: null,
-      });
+    let ativo = true;
+
+    if (!petAtivo?.id) return () => {
+      ativo = false;
+    };
+
+    buscarPetsDisponiveis(petAtivo.id)
+      .then((resultado) => {
+        if (ativo) {
+          setDescoberta({
+            animalId: petAtivo.id,
+            animais: resultado.animais,
+            erro: "",
+            carregando: false,
+          });
+        }
+      })
+      .catch((falha) => {
+        if (ativo) {
+          setDescoberta({
+            animalId: petAtivo.id,
+            animais: [],
+            erro: mensagemDeErro(
+              falha,
+              "Não foi possível carregar os pets disponíveis.",
+            ),
+            carregando: false,
+          });
+        }
+      })
+
+    return () => {
+      ativo = false;
+    };
+  }, [petAtivo?.id]);
+
+  useEffect(() => {
+    if (location.state?.match) {
+      navigate("/farejar", { replace: true, state: null });
     }
-  }, [location.state?.matchPetId, navigate]);
+  }, [location.state?.match, navigate]);
 
-  function decidir(tipo) {
-    const petAtual = fila[0];
-
-    if (!petAtual) return;
+  async function carregarMais(animalId) {
+    setDescoberta({
+      animalId,
+      animais: [],
+      erro: "",
+      carregando: true,
+    });
 
     try {
-      const resultado = removerDaFilaFarejar(tutorId, petAtivoId, petAtual.id);
+      const resultado = await buscarPetsDisponiveis(animalId);
+      setDescoberta({
+        animalId,
+        animais: resultado.animais,
+        erro: "",
+        carregando: false,
+      });
+    } catch (falha) {
+      setDescoberta({
+        animalId,
+        animais: [],
+        erro: mensagemDeErro(
+          falha,
+          "Não foi possível carregar os próximos pets.",
+        ),
+        carregando: false,
+      });
+    }
+  }
 
-      if (!resultado.alterou) return;
+  async function decidir(tipo) {
+    const fila =
+      String(descoberta.animalId) === String(petAtivo?.id)
+        ? descoberta.animais
+        : [];
+    const petAtual = fila[0];
 
-      setFila(resultado.fila);
-      setErro("");
+    if (!petAtual || !petAtivo || enviando) return;
 
-      if (tipo === "curtir" && matchIds.includes(String(petAtual.id))) {
-        setMatch(petAtual);
+    setEnviando(true);
+
+    try {
+      const resultado = await registrarInteracao(
+        petAtivo.id,
+        petAtual.id,
+        tipo === "curtir" ? "like" : "dislike",
+      );
+      const restantes = fila.slice(1);
+
+      setDescoberta({
+        animalId: petAtivo.id,
+        animais: restantes,
+        erro: "",
+        carregando: false,
+      });
+
+      if (resultado.deuMatch) {
+        setMatch({
+          ...petAtual,
+          matchId: resultado.match?.id,
+        });
       }
-    } catch {
-      setErro("Não foi possível registrar sua decisão.");
+
+      if (restantes.length === 0) {
+        await carregarMais(petAtivo.id);
+      }
+    } catch (falha) {
+      setDescoberta((atual) => ({
+        ...atual,
+        erro: mensagemDeErro(
+          falha,
+          "Não foi possível registrar sua decisão.",
+        ),
+      }));
+    } finally {
+      setEnviando(false);
     }
   }
 
@@ -71,9 +157,9 @@ function Farejar() {
       return;
     }
 
-    if (!match) return;
+    if (!match?.matchId) return;
 
-    navigate(`/chat/${match.id}`);
+    navigate(`/chat/${match.matchId}`);
   }
 
   function fecharMatch() {
@@ -81,6 +167,13 @@ function Farejar() {
     setAvisoChat(false);
   }
 
+  const descobertaAtual =
+    String(descoberta.animalId) === String(petAtivo?.id);
+  const fila = descobertaAtual ? descoberta.animais : [];
+  const carregando =
+    Boolean(petAtivo?.id) &&
+    (!descobertaAtual || descoberta.carregando);
+  const erro = descobertaAtual ? descoberta.erro : "";
   const pet = fila[0];
 
   return (
@@ -98,13 +191,31 @@ function Farejar() {
       )}
 
       <section className="farejar-centro">
-        {!pet ? (
-          <p className="farejar-vazio">Acabaram os pets!</p>
+        {carregando ? (
+          <p role="status">Carregando pets...</p>
+        ) : !pet ? (
+          <div>
+            <p className="farejar-vazio">
+              {erro
+                ? "Não foi possível exibir os pets."
+                : "Não há novos pets disponíveis para farejar."}
+            </p>
+            {erro && petAtivo?.id && (
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={() => carregarMais(petAtivo.id)}
+              >
+                Tentar novamente
+              </button>
+            )}
+          </div>
         ) : (
           <PetCard
             pet={pet}
             onCurtir={() => decidir("curtir")}
             onPassar={() => decidir("passar")}
+            disabled={enviando}
           />
         )}
       </section>
@@ -114,7 +225,7 @@ function Farejar() {
           <div className="match-caixa">
             <h2>É um match!</h2>
 
-            <img src={match.imagem} alt={match.nome} />
+            {match.imagem && <img src={match.imagem} alt={match.nome} />}
 
             <p>Você e {match.nome} se curtiram.</p>
 

@@ -1,0 +1,190 @@
+const { Animal, FotoAnimal, Interacao, Sequelize } = require("../../models");
+
+const { Op } = Sequelize;
+
+function criarErro(status, mensagem) {
+  const erro = new Error(mensagem);
+  erro.statusCode = status;
+  return erro;
+}
+
+function serializarAnimal(animal) {
+  const dados = animal.toJSON();
+  const fotos = (dados.fotos || [])
+    .slice()
+    .sort((a, b) => a.ordem - b.ordem)
+    .map((foto) => foto.url);
+
+  return {
+    ...dados,
+    fotos,
+    foto: fotos[0] || "",
+  };
+}
+
+async function listarAnimais({
+  tutorId,
+  animalId,
+  especie,
+  sexo,
+  cidade,
+  estado,
+  page = 1,
+  limit = 10,
+}) {
+  const idTutor = Number(tutorId);
+  const idAnimal = Number(animalId);
+  const pagina = Number(page);
+  const limite = Number(limit);
+
+  if (!Number.isSafeInteger(idTutor) || idTutor <= 0) {
+    throw criarErro(401, "Tutor não autenticado.");
+  }
+
+  if (!Number.isSafeInteger(idAnimal) || idAnimal <= 0) {
+    throw criarErro(400, "Informe um ID de animal válido.");
+  }
+
+  if (!Number.isSafeInteger(pagina) || pagina < 1) {
+    throw criarErro(400, "Página inválida.");
+  }
+
+  if (!Number.isSafeInteger(limite) || limite < 1 || limite > 100) {
+    throw criarErro(400, "O limite deve estar entre 1 e 100.");
+  }
+
+  const animalOrigem = await Animal.findByPk(idAnimal);
+
+  if (!animalOrigem) {
+    throw criarErro(404, "Animal selecionado não encontrado.");
+  }
+
+  if (Number(animalOrigem.tutorId) !== idTutor) {
+    throw criarErro(403, "Este animal não pertence ao tutor.");
+  }
+
+  if (!animalOrigem.ativo || !animalOrigem.disponivel) {
+    throw criarErro(409, "Este animal não está disponível para farejar.");
+  }
+
+  const interacoesAnteriores = await Interacao.findAll({
+    attributes: ["animal_alvo_id"],
+    where: {
+      animal_origem_id: idAnimal,
+    },
+    raw: true,
+  });
+
+  const idsExcluidos = [
+    idAnimal,
+    ...interacoesAnteriores.map((interacao) =>
+      Number(interacao.animal_alvo_id),
+    ),
+  ];
+
+  const filtros = {
+    id: {
+      [Op.notIn]: idsExcluidos,
+    },
+    tutorId: {
+      [Op.ne]: idTutor,
+    },
+    ativo: true,
+    disponivel: true,
+  };
+
+  if (especie !== undefined && especie !== "") {
+    const especiesPermitidas = {
+      cachorro: "Cachorro",
+      gato: "Gato",
+    };
+
+    const especieNormalizada = String(especie).trim().toLowerCase();
+
+    if (!especiesPermitidas[especieNormalizada]) {
+      throw criarErro(400, "Espécie inválida.");
+    }
+
+    filtros.especie = especiesPermitidas[especieNormalizada];
+  }
+
+  if (sexo !== undefined && sexo !== "") {
+    const sexosPermitidos = {
+      macho: "Macho",
+      femea: "Fêmea",
+      fêmea: "Fêmea",
+      todos: null,
+    };
+
+    const sexoNormalizado = String(sexo).trim().toLowerCase();
+
+    if (!(sexoNormalizado in sexosPermitidos)) {
+      throw criarErro(400, "Sexo inválido.");
+    }
+
+    if (sexosPermitidos[sexoNormalizado]) {
+      filtros.sexo = sexosPermitidos[sexoNormalizado];
+    }
+  }
+
+  if (cidade !== undefined && cidade !== "") {
+    const cidadeNormalizada = String(cidade).trim();
+
+    if (!cidadeNormalizada || cidadeNormalizada.length > 100) {
+      throw criarErro(400, "Cidade inválida.");
+    }
+
+    filtros.cidade = cidadeNormalizada;
+  }
+
+  if (estado !== undefined && estado !== "") {
+    const estadoNormalizado = String(estado).trim().toUpperCase();
+
+    if (!/^[A-Z]{2}$/.test(estadoNormalizado)) {
+      throw criarErro(400, "Estado inválido.");
+    }
+
+    filtros.estado = estadoNormalizado;
+  }
+
+  const resultado = await Animal.findAndCountAll({
+    attributes: [
+      "id",
+      "nome",
+      "especie",
+      "sexo",
+      "raca",
+      "idadeAnos",
+      "idadeMeses",
+      "porte",
+      "descricao",
+      "cidade",
+      "estado",
+    ],
+    include: [
+      {
+        model: FotoAnimal,
+        as: "fotos",
+        attributes: ["url", "ordem"],
+        required: false,
+      },
+    ],
+    where: filtros,
+    limit: limite,
+    offset: (pagina - 1) * limite,
+    order: [["id", "ASC"]],
+    distinct: true,
+  });
+
+  return {
+    total: resultado.count,
+    pagina,
+    limite,
+    totalPaginas: Math.ceil(resultado.count / limite),
+    animais: resultado.rows.map(serializarAnimal),
+  };
+}
+
+module.exports = {
+  listarAnimais,
+};

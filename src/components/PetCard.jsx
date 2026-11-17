@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import "./PetCard.css";
 
-function PetCard({ pet, onCurtir, onPassar }) {
+function PetCard({ pet, onCurtir, onPassar, disabled = false }) {
   return (
     <div className="pet-card card border-0 shadow-sm h-100">
       <Link
@@ -11,7 +11,17 @@ function PetCard({ pet, onCurtir, onPassar }) {
       />
 
       <div className="pet-card-imagem">
-        <img src={pet.imagem} alt={pet.nome} className="card-img-top" />
+        {pet.imagem ? (
+          <img src={pet.imagem} alt={pet.nome} className="card-img-top" />
+        ) : (
+          <div
+            className="pet-card-sem-imagem"
+            role="img"
+            aria-label={`Foto de ${pet.nome} não cadastrada`}
+          >
+            <span aria-hidden="true">🐾</span>
+          </div>
+        )}
       </div>
 
       <div
@@ -46,6 +56,7 @@ function PetCard({ pet, onCurtir, onPassar }) {
             type="button"
             className="btn pet-btn-passar flex-fill"
             onClick={onPassar}
+            disabled={disabled}
           >
             ✕ Passar
           </button>
@@ -54,6 +65,7 @@ function PetCard({ pet, onCurtir, onPassar }) {
             type="button"
             className="btn pet-btn-curtir flex-fill"
             onClick={onCurtir}
+            disabled={disabled}
           >
             ♥ Dar patinha
           </button>

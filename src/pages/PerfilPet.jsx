@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   FaArrowLeft,
@@ -8,18 +8,17 @@ import {
   FaTimes,
 } from "react-icons/fa";
 
-import pets from "../data/pets";
 import { useAuth } from "../context/useAuth";
 import { usePetAtivo } from "../context/usePetAtivo";
 import {
-  lerFilaFarejar,
-  removerDaFilaFarejar,
-} from "../services/farejarStorage";
+  buscarPetPorId,
+  mapearPetFarejar,
+  mensagemDeErro,
+  registrarInteracao,
+} from "../services/farejarService";
 
 import "./MeuPet.css";
 import "./PerfilPet.css";
-
-const matchIds = ["5"];
 
 function PerfilPet() {
   const { petId } = useParams();
@@ -30,21 +29,49 @@ function PerfilPet() {
 
   const [indiceFoto, setIndiceFoto] = useState(0);
   const [aviso, setAviso] = useState("");
+  const [perfil, setPerfil] = useState({
+    petId: null,
+    pet: null,
+    erro: "",
+  });
+  const [enviando, setEnviando] = useState(false);
 
-  const pet = pets.find((item) => String(item.id) === String(petId));
+  useEffect(() => {
+    let ativo = true;
 
-  const tutorId = String(user?.id ?? user?.email ?? "visitante");
+    buscarPetPorId(petId)
+      .then((animal) => {
+        if (ativo) setPerfil({ petId, pet: animal, erro: "" });
+      })
+      .catch((falha) => {
+        if (ativo) {
+          setPerfil({
+            petId,
+            pet: null,
+            erro: mensagemDeErro(
+              falha,
+              "Não foi possível carregar o perfil.",
+            ),
+          });
+        }
+      });
+
+    return () => {
+      ativo = false;
+    };
+  }, [petId]);
+
+  const perfilAtual = String(perfil.petId) === String(petId);
+  const pet = perfilAtual ? perfil.pet : null;
+  const carregando = !perfilAtual;
+  const erroPerfil = perfilAtual ? perfil.erro : "";
 
   const fotos = pet
     ? [
         ...new Set(
           [
             pet.imagem,
-            ...(Array.isArray(pet.fotos)
-              ? pet.fotos.map((foto) =>
-                  typeof foto === "string" ? foto : foto?.imagem || foto?.url,
-                )
-              : []),
+            ...pet.fotos,
           ].filter((foto) => typeof foto === "string" && foto.trim()),
         ),
       ]
@@ -55,30 +82,34 @@ function PerfilPet() {
   const disponivel = Boolean(
     petAtivo &&
     pet &&
-    lerFilaFarejar(tutorId, petAtivo.id).some(
-      (item) => String(item.id) === String(pet.id),
-    ),
+    String(pet.tutorId) !== String(user?.id) &&
+    pet.ativo !== false &&
+    pet.disponivel !== false,
   );
 
-  function decidir(tipo) {
-    if (!pet || !petAtivo) return;
+  async function decidir(tipo) {
+    if (!disponivel || enviando) return;
 
+    setEnviando(true);
+    setAviso("");
     try {
-      const resultado = removerDaFilaFarejar(tutorId, petAtivo.id, pet.id);
-
-      if (!resultado.alterou) {
-        setAviso("Este pet não está mais disponível na sua fila.");
-        return;
-      }
-
-      const houveMatch = tipo === "curtir" && matchIds.includes(String(pet.id));
-
+      const resultado = await registrarInteracao(
+        petAtivo.id,
+        pet.id,
+        tipo === "curtir" ? "like" : "dislike",
+      );
       navigate("/farejar", {
         replace: true,
-        state: houveMatch ? { matchPetId: pet.id } : null,
+        state: resultado.deuMatch
+          ? { match: mapearPetFarejar(pet), matchId: resultado.match?.id }
+          : null,
       });
-    } catch {
-      setAviso("Não foi possível registrar sua decisão.");
+    } catch (falha) {
+      setAviso(
+        mensagemDeErro(falha, "Não foi possível registrar sua decisão."),
+      );
+    } finally {
+      setEnviando(false);
     }
   }
 
@@ -112,13 +143,21 @@ function PerfilPet() {
     }
   }
 
+  if (carregando) {
+    return (
+      <main className="container py-5 text-center">
+        <p role="status">Carregando perfil do pet...</p>
+      </main>
+    );
+  }
+
   if (!pet) {
     return (
       <main className="container py-5 text-center">
         <h1 className="h3 fw-bold">Perfil não encontrado</h1>
 
         <p className="text-muted">
-          Este animal não está disponível nos dados atuais.
+          {erroPerfil || "Este animal não está disponível."}
         </p>
 
         <Link to="/farejar" className="btn btn-primary">
@@ -261,20 +300,20 @@ function PerfilPet() {
               type="button"
               className="btn perfil-pet-passar"
               onClick={() => decidir("passar")}
-              disabled={!disponivel}
+              disabled={!disponivel || enviando}
             >
               <FaTimes className="me-2" aria-hidden="true" />
-              Passar
+              {enviando ? "Registrando..." : "Passar"}
             </button>
 
             <button
               type="button"
               className="btn perfil-pet-patinha"
               onClick={() => decidir("curtir")}
-              disabled={!disponivel}
+              disabled={!disponivel || enviando}
             >
               <FaPaw className="me-2" aria-hidden="true" />
-              Dar patinha
+              {enviando ? "Registrando..." : "Dar patinha"}
             </button>
 
             <button
