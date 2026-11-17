@@ -1,4 +1,3 @@
-
 const { Router } = require("express");
 const authMiddleware = require("../middlewares/authMiddlewares");
 
@@ -185,6 +184,8 @@ const {
  *   post:
  *     summary: Cadastrar um animal
  *     tags: [Animais]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -319,6 +320,8 @@ router.get("/:id", buscarAnimalPorId);
  *   put:
  *     summary: Atualizar um animal
  *     tags: [Animais]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -356,6 +359,8 @@ router.put("/:id", authMiddleware, atualizarAnimal);
  *   delete:
  *     summary: Excluir um animal
  *     tags: [Animais]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
