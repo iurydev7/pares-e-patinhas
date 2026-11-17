@@ -10,8 +10,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     url: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT('medium'),
       allowNull: false
+    },
+    ordem: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     }
   }, {
     tableName: 'fotos_animais',

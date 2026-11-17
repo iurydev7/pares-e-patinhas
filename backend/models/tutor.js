@@ -4,11 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Tutor extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
+    
     static associate(db) {
       Tutor.hasMany(db.Animal, {
         foreignKey: 'tutorId',
@@ -41,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
 
       estado: {
         type: DataTypes.STRING(2),
+        allowNull: true,
+      },
+
+      foto: {
+        type: DataTypes.TEXT("medium"),
         allowNull: true,
       },
 

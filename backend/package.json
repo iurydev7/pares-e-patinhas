@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "API REST do projeto Pares & Patinhas",
   "main": "src/server.js",
-  "scripts": {
+ "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "db:create": "sequelize-cli db:create",
     "db:migrate": "sequelize-cli db:migrate",
     "db:status": "sequelize-cli db:migrate:status",
-    "db:undo": "sequelize-cli db:migrate:undo"
+    "db:undo": "sequelize-cli db:migrate:undo",
+    "test": "jest --coverage --forceExit"
   },
   "keywords": [],
   "author": "",
