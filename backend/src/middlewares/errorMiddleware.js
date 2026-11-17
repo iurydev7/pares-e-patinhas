@@ -7,12 +7,16 @@ function errorMiddleware(erro, req, res, next) {
     erro.statusCode >= 400 &&
     erro.statusCode <= 599
       ? erro.statusCode
+      : erro.type === "entity.too.large"
+        ? 413
       : 500;
 
   const message =
-    statusCode === 500
-      ? "Não foi possível concluir sua solicitação."
-      : erro.message || "Não foi possível concluir sua solicitação.";
+    erro.type === "entity.too.large"
+      ? "O tamanho total das imagens excede o limite permitido."
+      : statusCode === 500
+        ? "Não foi possível concluir sua solicitação."
+        : erro.message || "Não foi possível concluir sua solicitação.";
 
   // `code` é um identificador estável para o frontend (ex.: EMAIL_NAO_VERIFICADO).
   const code =

@@ -36,6 +36,7 @@ function formatarTutor(tutor) {
     id: tutor.id,
     name: tutor.nome,
     email: tutor.email,
+    foto: tutor.foto || "",
   };
 }
 
@@ -57,6 +58,10 @@ export function AuthProvider({ children }) {
 
     setUser(formatarTutor(tutor));
   }
+
+  const atualizarFotoTutor = useCallback((foto) => {
+    setUser((tutor) => (tutor ? { ...tutor, foto } : tutor));
+  }, []);
 
   // Autentica um tutor existente
   async function login(email, senha) {
@@ -235,6 +240,7 @@ export function AuthProvider({ children }) {
         cadastrar,
         verificarEmail,
         reenviarCodigo,
+        atualizarFotoTutor,
         logout,
         verificando,
       }}

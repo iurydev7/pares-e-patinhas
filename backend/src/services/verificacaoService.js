@@ -120,6 +120,7 @@ async function verificarEmail({ email, codigo }) {
       id: tutor.id,
       nome: tutor.nome,
       email: tutor.email,
+      foto: tutor.foto || "",
     },
   };
 }

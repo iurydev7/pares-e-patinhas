@@ -40,6 +40,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
 
+      foto: {
+        type: DataTypes.TEXT("medium"),
+        allowNull: true,
+      },
+
       // Verificação de e-mail: o código nunca é salvo em texto puro, só o HMAC dele.
       emailVerificado: {
         type: DataTypes.BOOLEAN,
