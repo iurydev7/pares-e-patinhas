@@ -3,7 +3,7 @@ import "./PetCard.css";
 
 function PetCard({ pet, onCurtir, onPassar, disabled = false }) {
   return (
-    <div className="pet-card card border-0 shadow-sm h-100">
+    <div className="pet-card card border-0 shadow-sm">
       <Link
         to={`/perfil-pet/${encodeURIComponent(String(pet.id))}`}
         className="pet-card-perfil-link"
@@ -29,7 +29,7 @@ function PetCard({ pet, onCurtir, onPassar, disabled = false }) {
           pet.sexo === "Fêmea" ? "pet-femea" : "pet-macho"
         }`}
       >
-        <div className="d-flex justify-content-between align-items-center mb-1">
+        <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
           <h5 className="card-title pet-card-nome mb-0">{pet.nome}</h5>
 
           <span className="pet-card-idade">

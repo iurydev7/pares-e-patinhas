@@ -23,6 +23,7 @@ describe("Serviço de descoberta de pets", () => {
     Animal.findByPk.mockResolvedValue({
       id: 1,
       tutorId: 7,
+      especie: "Cachorro",
       ativo: true,
       disponivel: true,
     });
@@ -63,7 +64,23 @@ describe("Serviço de descoberta de pets", () => {
     const filtros = Animal.findAndCountAll.mock.calls[0][0];
     expect(filtros.where.id[Sequelize.Op.notIn]).toEqual([1, 3]);
     expect(filtros.where.tutorId[Sequelize.Op.ne]).toBe(7);
+    expect(filtros.where.especie).toBe("Cachorro");
     expect(filtros.include[0].as).toBe("fotos");
     expect(filtros.distinct).toBe(true);
+  });
+
+  it("não permite consultar pets de espécie diferente do animal selecionado", async () => {
+    await expect(
+      listarAnimais({
+        tutorId: 7,
+        animalId: 1,
+        especie: "gato",
+      }),
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: "A espécie informada deve ser a mesma do animal selecionado.",
+    });
+
+    expect(Animal.findAndCountAll).not.toHaveBeenCalled();
   });
 });
