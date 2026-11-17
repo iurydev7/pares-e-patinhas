@@ -17,6 +17,8 @@ async function listar(req, res, next) {
       limit,
     });
 
+    res.set("Cache-Control", "no-store");
+
     return res.status(200).json(resultado);
   } catch (error) {
     return next(error);
