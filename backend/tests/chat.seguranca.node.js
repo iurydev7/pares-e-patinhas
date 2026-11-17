@@ -163,6 +163,26 @@ describe("1. Controle de acesso: só quem deu match participa da conversa", () =
     assert.deepEqual(await chat.listarConversas(4), [], "tutor sem pets não vê nada");
   });
 
+  it("mantém o histórico acessível aos dois tutores e identifica mensagens recebidas", async () => {
+    await enviar(ANA, CONVERSA_ANA_BRUNO, "Oi, Bruno!");
+
+    const conversaAna = (await chat.listarConversas(ANA)).find(
+      (conversa) => conversa.matchId === CONVERSA_ANA_BRUNO
+    );
+    const conversaBruno = (await chat.listarConversas(BRUNO)).find(
+      (conversa) => conversa.matchId === CONVERSA_ANA_BRUNO
+    );
+
+    assert.equal(conversaAna.matchId, CONVERSA_ANA_BRUNO);
+    assert.equal(conversaBruno.matchId, CONVERSA_ANA_BRUNO);
+    assert.equal(conversaAna.ultimaMensagem.texto, "Oi, Bruno!");
+    assert.equal(conversaAna.ultimaMensagem.minha, true);
+    assert.equal(conversaBruno.ultimaMensagem.texto, "Oi, Bruno!");
+    assert.equal(conversaBruno.ultimaMensagem.minha, false);
+    assert.equal(conversaAna.naoLidas, 0);
+    assert.equal(conversaBruno.naoLidas, 1);
+  });
+
   it("não é possível se passar por outro remetente nem gravar em outra conversa pelo corpo da requisição", async () => {
     await chat.enviarMensagem(ANA, CONVERSA_ANA_BRUNO, {
       texto: "tentativa de falsificação",
