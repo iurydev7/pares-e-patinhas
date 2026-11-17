@@ -9,7 +9,7 @@ const UFS = [
 ];
 
 function normalizar(valor) {
-    if (typeof valor !== "string") return"";
+    if (typeof valor !== "string") return "";
     return valor.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
@@ -29,15 +29,15 @@ function validarCadastroAnimal(body) {
 
     const nome = typeof dados.nome === "string" ? dados.nome.trim():"";
     if (!nome) erros.push("Nome é obrigatório!");
-    else if (nome.legth > 120) erros.push("Nome deve conter até 120 caracteres");
+    else if (nome.length > 120) erros.push("Nome deve conter até 120 caracteres");
 
     const especie = normalizar(dados.especie);
-    if(!especie) erros.push("Especie ´s obrigatória!");
-    else if (!ESPECIES.includes(especie)) erros.push(`Especies inválida (use: ${ESPECIES.join(", ")})`);
+    if (!especie) erros.push("Espécie é obrigatória!");
+    else if (!ESPECIES.includes(especie)) erros.push(`Espécie inválida (use: ${ESPECIES.join(", ")})`);
 
     const sexo = normalizar(dados.sexo);
     if (!sexo) erros.push("Sexo é obrigatório!");
-    else if (!ESPECIES.includes(especie)) erros.push (`sexo inválido (use: ${SEXOS.join(", ")})`);
+    else if (!SEXOS.includes(sexo)) erros.push(`Sexo inválido (use: ${SEXOS.join(", ")})`);
 
     const porte = normalizar(dados.porte);
     if (!porte) erros.push("Porte é obrigatório!");
