@@ -37,6 +37,14 @@ async function autenticarTutor({ email, senha }) {
     throw error;
   }
 
+  // Só depois de a senha conferir: não revela a ninguém mais que a conta existe.
+  if (!tutor.emailVerificado) {
+    const error = new Error("Confirme seu e-mail para entrar.");
+    error.statusCode = 403;
+    error.codigoErro = "EMAIL_NAO_VERIFICADO";
+    throw error;
+  }
+
   if (!process.env.JWT_SECRET) {
     throw new Error("JWT_SECRET não configurado.");
   }
@@ -56,6 +64,7 @@ async function autenticarTutor({ email, senha }) {
       id: tutor.id,
       nome: tutor.nome,
       email: tutor.email,
+      foto: tutor.foto || "",
     },
   };
 }

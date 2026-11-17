@@ -36,6 +36,7 @@ function formatarTutor(tutor) {
     id: tutor.id,
     name: tutor.nome,
     email: tutor.email,
+    foto: tutor.foto || "",
   };
 }
 
@@ -57,6 +58,10 @@ export function AuthProvider({ children }) {
 
     setUser(formatarTutor(tutor));
   }
+
+  const atualizarFotoTutor = useCallback((foto) => {
+    setUser((tutor) => (tutor ? { ...tutor, foto } : tutor));
+  }, []);
 
   // Autentica um tutor existente
   async function login(email, senha) {
@@ -80,26 +85,27 @@ export function AuthProvider({ children }) {
         return false;
       }
 
+      // 403 = senha correta, mas o e-mail ainda não foi confirmado com o código
+      if (
+        error.response?.status === 403 &&
+        error.response.data?.code === "EMAIL_NAO_VERIFICADO"
+      ) {
+        return "verificar";
+      }
+
       throw error;
     }
   }
 
-  // Cadastra e autentica automaticamente
+  // Cria a conta (ainda sem sessão): a API envia um código para o e-mail informado.
+  // true = conta criada, falta confirmar o código; false = e-mail já cadastrado.
   async function cadastrar(nome, email, senha) {
     try {
-      const resposta = await api.post("/auth/register", {
+      await api.post("/auth/register", {
         nome: nome.trim(),
         email: email.trim().toLowerCase(),
         senha,
       });
-
-      const { token, tutor } = resposta.data;
-
-      if (!token || !tutor) {
-        throw new Error("Resposta de cadastro inválida.");
-      }
-
-      iniciarSessao(token, tutor);
 
       return true;
     } catch (error) {
@@ -109,6 +115,29 @@ export function AuthProvider({ children }) {
 
       throw error;
     }
+  }
+
+  // Confirma o código recebido por e-mail; a API já devolve a sessão (token)
+  async function verificarEmail(email, codigo) {
+    const resposta = await api.post("/auth/verify-email", {
+      email: email.trim().toLowerCase(),
+      codigo,
+    });
+
+    const { token, tutor } = resposta.data;
+
+    if (!token || !tutor) {
+      throw new Error("Resposta de verificação inválida.");
+    }
+
+    iniciarSessao(token, tutor);
+  }
+
+  // Pede um novo código (o anterior deixa de valer)
+  async function reenviarCodigo(email) {
+    await api.post("/auth/resend-code", {
+      email: email.trim().toLowerCase(),
+    });
   }
 
   // Valida a sessão ao iniciar ou atualizar a aplicação
@@ -209,6 +238,9 @@ export function AuthProvider({ children }) {
         user,
         login,
         cadastrar,
+        verificarEmail,
+        reenviarCodigo,
+        atualizarFotoTutor,
         logout,
         verificando,
       }}

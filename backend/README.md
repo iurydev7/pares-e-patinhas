@@ -321,3 +321,19 @@ Antes de solicitar o merge, é recomendado verificar se o servidor inicia corret
 - Proteger endpoints privados com autenticação JWT.
 - Não retornar informações internas do servidor nas respostas de erro.
 - Validar os dados recebidos antes de persistir no banco.
+
+## Verificação de e-mail e senha forte
+
+- **Senha forte** no cadastro: pelo menos 8 caracteres (até 72 bytes) com letra maiúscula, minúscula, número e caractere especial. Regra no backend em `src/utils/senha.js` e espelhada no formulário em `../src/utils/senha.js`.
+- **Cadastro em duas etapas:**
+  1. `POST /api/auth/register` cria o tutor como **não verificado** e envia um código de 6 dígitos para o e-mail (não devolve token).
+  2. `POST /api/auth/verify-email` (`{ email, codigo }`) confirma o código e devolve `{ token, tutor }`.
+  3. `POST /api/auth/resend-code` (`{ email }`) gera um código novo.
+- Enquanto o e-mail não é confirmado, `POST /api/auth/login` responde `403` com `code: "EMAIL_NAO_VERIFICADO"`.
+- **Regras do código:** vale 15 minutos, no máximo 5 tentativas, um envio a cada 60 segundos por e-mail. No banco fica apenas o HMAC do código.
+- **Banco:** a migration `20261115230000-add-verificacao-email-tutor.js` adiciona 5 colunas em `tutores` (`emailVerificado`, `codigoVerificacaoHash`, `codigoExpiraEm`, `codigoTentativas`, `codigoEnviadoEm`). Contas que já existiam são marcadas como verificadas. Aplique com `npm run db:migrate`.
+- **Envio (`MAIL_DRIVER` no `.env`):**
+  - `console` — só imprime o código no terminal da API (padrão fora de produção);
+  - `smtp` — Gmail com Senha de App, via `nodemailer` (`npm install nodemailer`);
+  - `gmail_api` — API do Gmail por HTTPS, para hospedagens que bloqueiam as portas SMTP (ex.: plano Free do Render).
+  Em produção, sem `MAIL_DRIVER` o cadastro responde 502 em vez de registrar o código em log.

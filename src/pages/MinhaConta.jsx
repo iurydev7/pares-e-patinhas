@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Cropper from "react-easy-crop";
 
+import api from "../services/api";
 import { useAuth } from "../context/useAuth";
 import { usePetAtivo } from "../context/usePetAtivo";
 import "./MinhaConta.css";
@@ -25,10 +26,12 @@ function carregarTutor(chave, user) {
     estado: user?.estado || "",
 
     foto:
-      String(user?.id) === "1" &&
-      user?.email?.toLowerCase() === "carlinhos.jesus@gmail.com"
-        ? "/uploads/tutores/Carlinhos-jesus.png"
-        : user?.foto || "",
+      typeof user?.foto === "string"
+        ? user.foto
+        : String(user?.id) === "1" &&
+            user?.email?.toLowerCase() === "carlinhos.jesus@gmail.com"
+          ? "/uploads/tutores/Carlinhos-jesus.png"
+          : "",
   };
 
   try {
@@ -44,7 +47,11 @@ function carregarTutor(chave, user) {
           cidade: dados.cidade ?? dadosIniciais.cidade,
           estado: dados.estado ?? dadosIniciais.estado,
           foto:
-            typeof dados.foto === "string" ? dados.foto : dadosIniciais.foto,
+            user?.foto
+              ? user.foto
+              : typeof dados.foto === "string"
+                ? dados.foto
+                : dadosIniciais.foto,
         };
       }
     }
@@ -149,8 +156,16 @@ function formatarIdade(idade) {
   return `${idade} ${numero === 1 ? "ano" : "anos"}`;
 }
 
-function ConteudoMinhaConta({ user }) {
-  const { pets, petAtivo, selecionarPet, desselecionarPet } = usePetAtivo();
+function ConteudoMinhaConta({ user, atualizarFotoTutor }) {
+  const {
+    pets,
+    petAtivo,
+    carregandoPets,
+    erroCarregamentoPets,
+    avisoCachePets,
+    selecionarPet,
+    desselecionarPet,
+  } = usePetAtivo();
 
   const identificador = user?.id ?? user?.email ?? "visitante";
   const chaveTutor = `tutor-editado-${identificador}`;
@@ -288,7 +303,7 @@ function ConteudoMinhaConta({ user }) {
     setErroTutor("");
   }
 
-  function salvarTutor(evento) {
+  async function salvarTutor(evento) {
     evento.preventDefault();
 
     if (processandoFoto || editorAberto) {
@@ -316,14 +331,33 @@ function ConteudoMinhaConta({ user }) {
     }
 
     try {
-      localStorage.setItem(chaveTutor, JSON.stringify(dadosAtualizados));
+      const resposta = await api.patch("/auth/me", {
+        foto: dadosAtualizados.foto,
+      });
+      dadosAtualizados.foto = resposta.data.tutor.foto || "";
+
+      let falhaAoSalvarNoNavegador = false;
+      try {
+        localStorage.setItem(chaveTutor, JSON.stringify(dadosAtualizados));
+      } catch {
+        falhaAoSalvarNoNavegador = true;
+      }
 
       setDadosTutor(dadosAtualizados);
       setFormTutor(dadosAtualizados);
+      atualizarFotoTutor(dadosAtualizados.foto);
       setEditandoTutor(false);
-      setErroTutor("");
-    } catch {
-      setErroTutor("Não foi possível salvar os dados do tutor.");
+      setErroTutor(
+        falhaAoSalvarNoNavegador
+          ? "A foto foi salva na conta, mas os demais dados não puderam ser salvos neste navegador."
+          : "",
+      );
+    } catch (falha) {
+      setErroTutor(
+        falha.response?.data?.message ||
+          falha.response?.data?.mensagem ||
+          "Não foi possível salvar a foto do tutor.",
+      );
     }
   }
 
@@ -558,15 +592,33 @@ function ConteudoMinhaConta({ user }) {
               </Link>
             </div>
 
+            {carregandoPets && (
+              <p role="status">Carregando os pets da sua conta...</p>
+            )}
+
+            {avisoCachePets && (
+              <p className="text-muted" role="status">
+                {avisoCachePets}
+              </p>
+            )}
+
+            {erroCarregamentoPets && (
+              <p className="text-danger" role="alert">
+                Não foi possível carregar os pets: {erroCarregamentoPets}
+              </p>
+            )}
+
             {erroPet && (
               <p className="text-danger" role="alert">
                 {erroPet}
               </p>
             )}
 
-            {pets.length === 0 ? (
+            {!carregandoPets &&
+            !erroCarregamentoPets &&
+            pets.length === 0 ? (
               <p>Você ainda não possui pets cadastrados.</p>
-            ) : (
+            ) : !carregandoPets && pets.length > 0 ? (
               <div className="row g-3 lista-cards-pets">
                 {pets.map((pet) => {
                   const ativo = Boolean(
@@ -658,7 +710,7 @@ function ConteudoMinhaConta({ user }) {
                   );
                 })}
               </div>
-            )}
+            ) : null}
           </section>
         </div>
       </div>
@@ -819,9 +871,15 @@ function ConteudoMinhaConta({ user }) {
 }
 
 export default function MinhaConta() {
-  const { user } = useAuth();
+  const { user, atualizarFotoTutor } = useAuth();
 
   const identificador = user?.id ?? user?.email ?? "visitante";
 
-  return <ConteudoMinhaConta key={identificador} user={user} />;
+  return (
+    <ConteudoMinhaConta
+      key={identificador}
+      user={user}
+      atualizarFotoTutor={atualizarFotoTutor}
+    />
+  );
 }

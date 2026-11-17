@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useAuth } from "./useAuth";
 import { PetAtivoContext } from "./PetAtivoContext";
+import api from "../services/api";
 
 import {
   chavePets,
@@ -11,15 +12,122 @@ import {
   lerEstadoPet,
 } from "../services/petStorage";
 
+function mapearAnimal(animal, petLocal) {
+  const sexo = animal.sexo?.toLowerCase() || "";
+  const fotosDoBanco = Array.isArray(animal.fotos) ? animal.fotos : [];
+  const fotosLocais = Array.isArray(petLocal?.fotos) ? petLocal.fotos : [];
+  const fotos = fotosDoBanco.length > 0 ? fotosDoBanco : fotosLocais;
+  const foto = animal.foto || fotos[0] || petLocal?.foto || "";
+
+  return {
+    ...petLocal,
+    id: animal.id,
+    nome: animal.nome,
+    especie: animal.especie,
+    sexo,
+    genero: sexo,
+    raca: animal.raca || "",
+    idade: animal.idadeAnos,
+    idadeAnos: animal.idadeAnos,
+    idadeMeses: animal.idadeMeses,
+    porte: animal.porte,
+    descricao: animal.descricao || "",
+    cidade: animal.cidade || "",
+    estado: animal.estado || "",
+    vacinas: petLocal?.vacinas || "",
+    foto,
+    fotos,
+  };
+}
+
+function salvarCachePets(tutorId, pets, petAtivoId, setAviso) {
+  try {
+    gravarPets(tutorId, pets);
+    gravarPetAtivo(tutorId, petAtivoId);
+    setAviso("");
+  } catch (error) {
+    setAviso(
+      `Os pets estão disponíveis nesta sessão, mas não foi possível atualizar o armazenamento local: ${error.message}`,
+    );
+  }
+}
+
 function SessaoPetAtivo({ children, tutorId }) {
   const [estado, setEstado] = useState(() => lerEstadoPet(tutorId));
+  const [carregandoPets, setCarregandoPets] = useState(Boolean(tutorId));
+  const [erroCarregamentoPets, setErroCarregamentoPets] = useState("");
+  const [avisoCachePets, setAvisoCachePets] = useState("");
+
+  useEffect(() => {
+    if (!tutorId) {
+      return;
+    }
+
+    let ativo = true;
+
+    async function carregarPets() {
+      setCarregandoPets(true);
+      setErroCarregamentoPets("");
+      setAvisoCachePets("");
+
+      try {
+        const resposta = await api.get("/animals/mine");
+        const animais = resposta.data?.animais;
+
+        if (!Array.isArray(animais)) {
+          throw new Error("A resposta da lista de pets é inválida.");
+        }
+
+        const estadoAnterior = lerEstadoPet(tutorId);
+        const petsLocais = new Map(
+          estadoAnterior.pets.map((pet) => [String(pet.id), pet]),
+        );
+        const pets = animais.map((animal) =>
+          mapearAnimal(animal, petsLocais.get(String(animal.id))),
+        );
+        const petAtivoId = pets.some(
+          (pet) => String(pet.id) === estadoAnterior.petAtivoId,
+        )
+          ? estadoAnterior.petAtivoId
+          : null;
+
+        if (!ativo) return;
+
+        setEstado({ pets, petAtivoId });
+        salvarCachePets(
+          tutorId,
+          pets,
+          petAtivoId,
+          setAvisoCachePets,
+        );
+      } catch (error) {
+        if (ativo) {
+          setErroCarregamentoPets(
+            error.response?.data?.mensagem ||
+              error.response?.data?.message ||
+              error.message ||
+              "Não foi possível carregar os pets da sua conta.",
+          );
+        }
+      } finally {
+        if (ativo) {
+          setCarregandoPets(false);
+        }
+      }
+    }
+
+    carregarPets();
+
+    return () => {
+      ativo = false;
+    };
+  }, [tutorId]);
 
   useEffect(() => {
     if (!tutorId) return;
 
     function sincronizar(evento) {
       if (
-        evento.type === "focus" ||
         evento.key === null ||
         evento.key === chavePets(tutorId) ||
         evento.key === chavePetAtivo(tutorId)
@@ -29,11 +137,9 @@ function SessaoPetAtivo({ children, tutorId }) {
     }
 
     window.addEventListener("storage", sincronizar);
-    window.addEventListener("focus", sincronizar);
 
     return () => {
       window.removeEventListener("storage", sincronizar);
-      window.removeEventListener("focus", sincronizar);
     };
   }, [tutorId]);
 
@@ -43,7 +149,7 @@ function SessaoPetAtivo({ children, tutorId }) {
         throw new Error("Faça login para cadastrar um pet.");
       }
 
-      const anterior = lerEstadoPet(tutorId);
+      const anterior = estado;
 
       const novoPet = {
         ...dados,
@@ -52,16 +158,20 @@ function SessaoPetAtivo({ children, tutorId }) {
 
       const lista = [...anterior.pets, novoPet];
 
-      gravarPets(tutorId, lista);
-
       setEstado({
         pets: lista,
         petAtivoId: anterior.petAtivoId,
       });
+      salvarCachePets(
+        tutorId,
+        lista,
+        anterior.petAtivoId,
+        setAvisoCachePets,
+      );
 
       return novoPet;
     },
-    [tutorId],
+    [tutorId, estado],
   );
 
   const selecionarPet = useCallback(
@@ -70,7 +180,7 @@ function SessaoPetAtivo({ children, tutorId }) {
         throw new Error("Faça login para selecionar um pet.");
       }
 
-      const anterior = lerEstadoPet(tutorId);
+      const anterior = estado;
 
       const escolhido = anterior.pets.find(
         (pet) => String(pet.id) === String(petId),
@@ -80,14 +190,18 @@ function SessaoPetAtivo({ children, tutorId }) {
         throw new Error("Pet não encontrado.");
       }
 
-      gravarPetAtivo(tutorId, escolhido.id);
-
       setEstado({
         pets: anterior.pets,
         petAtivoId: String(escolhido.id),
       });
+      salvarCachePets(
+        tutorId,
+        anterior.pets,
+        String(escolhido.id),
+        setAvisoCachePets,
+      );
     },
-    [tutorId],
+    [tutorId, estado],
   );
 
   const desselecionarPet = useCallback(() => {
@@ -95,15 +209,14 @@ function SessaoPetAtivo({ children, tutorId }) {
       throw new Error("Faça login para desselecionar um pet.");
     }
 
-    const anterior = lerEstadoPet(tutorId);
-
-    gravarPetAtivo(tutorId, null);
+    const anterior = estado;
 
     setEstado({
       pets: anterior.pets,
       petAtivoId: null,
     });
-  }, [tutorId]);
+    salvarCachePets(tutorId, anterior.pets, null, setAvisoCachePets);
+  }, [tutorId, estado]);
 
   const atualizarPet = useCallback(
     (petId, alteracoes) => {
@@ -111,7 +224,7 @@ function SessaoPetAtivo({ children, tutorId }) {
         throw new Error("Faça login para editar um pet.");
       }
 
-      const anterior = lerEstadoPet(tutorId);
+      const anterior = estado;
 
       const original = anterior.pets.find(
         (pet) => String(pet.id) === String(petId),
@@ -131,41 +244,41 @@ function SessaoPetAtivo({ children, tutorId }) {
         String(pet.id) === String(petId) ? atualizado : pet,
       );
 
-      gravarPets(tutorId, lista);
-
       const petAtivoId =
         anterior.petAtivoId === String(petId)
           ? String(atualizado.id)
           : anterior.petAtivoId;
 
-      if (petAtivoId !== anterior.petAtivoId) {
-        gravarPetAtivo(tutorId, petAtivoId);
-      }
-
       setEstado({
         pets: lista,
         petAtivoId,
       });
+      salvarCachePets(tutorId, lista, petAtivoId, setAvisoCachePets);
 
       return atualizado;
     },
-    [tutorId],
+    [tutorId, estado],
   );
 
   const excluirPet = useCallback(
-    (petId) => {
+    async (petId) => {
       if (!tutorId) {
         throw new Error("Faça login para excluir um pet.");
       }
 
-      const anterior = lerEstadoPet(tutorId);
+      const anterior = estado;
 
-      const existe = anterior.pets.some(
+      const existe = anterior.pets.find(
         (pet) => String(pet.id) === String(petId),
       );
 
       if (!existe) {
         throw new Error("Pet não encontrado.");
+      }
+
+      const idBanco = Number(petId);
+      if (Number.isSafeInteger(idBanco) && idBanco > 0) {
+        await api.delete(`/animals/${idBanco}`);
       }
 
       const lista = anterior.pets.filter(
@@ -174,18 +287,26 @@ function SessaoPetAtivo({ children, tutorId }) {
 
       const eraAtivo = anterior.petAtivoId === String(petId);
 
-      gravarPets(tutorId, lista);
-
       if (eraAtivo) {
-        gravarPetAtivo(tutorId, null);
+        setEstado({
+          pets: lista,
+          petAtivoId: null,
+        });
+      } else {
+        setEstado({
+          pets: lista,
+          petAtivoId: anterior.petAtivoId,
+        });
       }
 
-      setEstado({
-        pets: lista,
-        petAtivoId: eraAtivo ? null : anterior.petAtivoId,
-      });
+      salvarCachePets(
+        tutorId,
+        lista,
+        eraAtivo ? null : anterior.petAtivoId,
+        setAvisoCachePets,
+      );
     },
-    [tutorId],
+    [tutorId, estado],
   );
 
   const petAtivo =
@@ -195,6 +316,9 @@ function SessaoPetAtivo({ children, tutorId }) {
     () => ({
       pets: estado.pets,
       petAtivo,
+      carregandoPets,
+      erroCarregamentoPets,
+      avisoCachePets,
       adicionarPet,
       selecionarPet,
       desselecionarPet,
@@ -204,6 +328,9 @@ function SessaoPetAtivo({ children, tutorId }) {
     [
       estado.pets,
       petAtivo,
+      carregandoPets,
+      erroCarregamentoPets,
+      avisoCachePets,
       adicionarPet,
       selecionarPet,
       desselecionarPet,

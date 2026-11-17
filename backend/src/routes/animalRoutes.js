@@ -5,6 +5,7 @@ const router = Router();
 
 const {
   cadastrarAnimal,
+  listarAnimaisDoTutor,
   listarAnimais,
   buscarAnimalPorId,
   atualizarAnimal,
@@ -68,6 +69,14 @@ const {
  *           nullable: true
  *           maxLength: 2
  *           example: CE
+ *         foto:
+ *           type: string
+ *           description: Data URL da foto principal.
+ *         fotos:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: Galeria do animal em ordem de exibição.
  *         tutorId:
  *           type: integer
  *           example: 1
@@ -123,6 +132,12 @@ const {
  *           type: string
  *           nullable: true
  *           example: CE
+ *         fotos:
+ *           type: array
+ *           maxItems: 5
+ *           items:
+ *             type: string
+ *           description: Data URLs de imagens JPG, PNG ou WebP.
  *         tutorId:
  *           type: integer
  *           example: 1
@@ -173,6 +188,12 @@ const {
  *           type: string
  *           nullable: true
  *           example: CE
+ *         fotos:
+ *           type: array
+ *           maxItems: 5
+ *           items:
+ *             type: string
+ *           description: Nova galeria; envie uma lista vazia para remover as fotos.
  *         tutorId:
  *           type: integer
  *           example: 1
@@ -215,6 +236,22 @@ const {
  *         description: Erro ao cadastrar animal.
  */
 router.post("/", authMiddleware, cadastrarAnimal);
+
+/**
+ * @swagger
+ * /api/animals/mine:
+ *   get:
+ *     summary: Listar animais do tutor autenticado
+ *     tags: [Animais]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Animais do tutor retornados com sucesso.
+ *       401:
+ *         description: Autenticação necessária.
+ */
+router.get("/mine", authMiddleware, listarAnimaisDoTutor);
 
 /**
  * @swagger
