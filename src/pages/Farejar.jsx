@@ -201,7 +201,7 @@ function Farejar() {
         {carregando ? (
           <p role="status">Carregando pets...</p>
         ) : !pet ? (
-          <div>
+          <div className="farejar-sem-pets">
             <p className="farejar-vazio">
               {erro
                 ? "Não foi possível exibir os pets."
@@ -210,7 +210,7 @@ function Farejar() {
             {petAtivo?.id && (
               <button
                 type="button"
-                className="btn btn-outline-primary"
+                className="farejar-atualizar"
                 onClick={() => carregarMais(petAtivo.id)}
               >
                 {erro ? "Tentar novamente" : "Verificar novamente"}
@@ -224,6 +224,14 @@ function Farejar() {
                 ? "1 pet disponível"
                 : `${descoberta.total} pets disponíveis`}
             </p>
+            <button
+              type="button"
+              className="farejar-atualizar"
+              disabled={enviando}
+              onClick={() => carregarMais(petAtivo.id)}
+            >
+              Atualizar pets
+            </button>
             <PetCard
               pet={pet}
               onCurtir={() => decidir("curtir")}

@@ -153,7 +153,7 @@ function SessaoPetAtivo({ children, tutorId }) {
 
       const novoPet = {
         ...dados,
-        id: crypto.randomUUID(),
+        id: dados.id ?? crypto.randomUUID(),
       };
 
       const lista = [...anterior.pets, novoPet];

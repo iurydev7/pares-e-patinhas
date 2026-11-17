@@ -109,6 +109,12 @@ async function listarAnimais({
   ];
 
   const filtros = {
+    [Op.and]: [
+      Sequelize.where(
+        Sequelize.fn("LOWER", Sequelize.col("especie")),
+        especieOrigem,
+      ),
+    ],
     id: {
       [Op.notIn]: idsExcluidos,
     },
@@ -118,8 +124,6 @@ async function listarAnimais({
     ativo: true,
     disponivel: true,
   };
-
-  filtros.especie = animalOrigem.especie;
 
   if (sexo !== undefined && sexo !== "") {
     const sexosPermitidos = {
@@ -185,7 +189,7 @@ async function listarAnimais({
     where: filtros,
     limit: limite,
     offset: (pagina - 1) * limite,
-    order: [["id", "ASC"]],
+    order: [["id", "DESC"]],
     distinct: true,
   });
 
