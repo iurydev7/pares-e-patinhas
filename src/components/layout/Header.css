@@ -360,6 +360,10 @@
     border-radius: 999px;
   }
 
+  .header-container.header-logado .header-nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .nav-item {
     display: flex;
     align-items: center;

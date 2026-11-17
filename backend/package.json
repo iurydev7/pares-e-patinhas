@@ -10,6 +10,7 @@
     "db:migrate": "sequelize-cli db:migrate",
     "db:status": "sequelize-cli db:migrate:status",
     "db:undo": "sequelize-cli db:migrate:undo",
+    "test:chat": "node --test tests/chat.seguranca.node.js",
     "test": "jest --coverage --forceExit"
   },
   "keywords": [],

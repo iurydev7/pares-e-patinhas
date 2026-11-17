@@ -8,6 +8,8 @@ import MeuPet from "./pages/MeuPet";
 import PerfilPet from "./pages/PerfilPet";
 import CadastroPet from "./pages/CadastroPet";
 import MinhaConta from "./pages/MinhaConta";
+import Conversas from "./pages/Conversas";
+import Chat from "./pages/Chat";
 import ProtectedRoute from "./components/ProtectedRoute";
 import FarejarGuard from "./components/FarejarGuard";
 
@@ -25,6 +27,8 @@ function App() {
           <Route path="/editar-pet/:petId" element={<CadastroPet />} />
           <Route path="/meu-pet" element={<MeuPet />} />
           <Route path="/meu-pet/:petId" element={<MeuPet />} />
+          <Route path="/conversas" element={<Conversas />} />
+          <Route path="/chat/:matchId" element={<Chat />} />
 
           <Route element={<FarejarGuard />}>
             <Route path="/farejar" element={<Farejar />} />

@@ -1,13 +1,13 @@
 ## 🚀 Como rodar o projeto localmente
 
 1. **Instalar dependências:** `npm install`
-2. **Criar o .env:** Copie o `.env.example` para `.env` e ajuste as credenciais do seu banco local.
-3. **Executar Migrations:** `npx sequelize-cli db:migrate`
+2. **Criar `backend/.env`:** configure as variáveis de conexão com o banco; não use o `.env.example` da raiz, pois ele configura apenas o frontend.
+3. **Executar migrations:** `npm run db:migrate`, depois de confirmar o ambiente e o estado das migrations pendentes.
 4. **Iniciar o servidor:** `npm run dev`
 
 ## Configuração e Banco de Dados Local
 
-Para configurar e rodar o banco de dados na tua máquina local, cria um arquivo `.env` na raiz da pasta `backend`, baseando-te no `.env.example`, e preenche com as tuas credenciais locais do MySQL/MariaDB:
+Crie `backend/.env` com as credenciais do banco que a API deve acessar. Para um MySQL local, por exemplo:
 
 ```env
 PORT=3000
@@ -17,6 +17,18 @@ DB_PASSWORD=tua_senha_aqui
 DB_NAME=pares_e_patinhas
 DB_PORT=3306
 ```
+
+Para conectar a API a um cluster TiDB, use os valores de host, usuário, senha, banco e porta fornecidos pelo cluster. Mantenha o TLS habilitado quando exigido pelo provedor; `DB_SSL=false` é apenas para um banco local que não suporte TLS.
+
+### Chave de criptografia do chat
+
+A chave é usada pela API, não pelo frontend nem pelo TiDB. Gere uma chave de 32 bytes (64 caracteres hexadecimais) com:
+
+```sh
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+Adicione o resultado a `backend/.env` como `CHAT_CHAVE_CRIPTOGRAFIA=<chave-gerada>`. Em produção, configure-a como segredo/variável de ambiente no serviço que executa a API. Não a versione, compartilhe ou altere sem planejar a migração das mensagens já cifradas; mantenha a mesma chave em todas as instâncias da API e guarde uma cópia segura.
 
 ---
 ## Arquitetura do Back-end
@@ -337,3 +349,12 @@ Antes de solicitar o merge, é recomendado verificar se o servidor inicia corret
   - `smtp` — Gmail com Senha de App, via `nodemailer` (`npm install nodemailer`);
   - `gmail_api` — API do Gmail por HTTPS, para hospedagens que bloqueiam as portas SMTP (ex.: plano Free do Render).
   Em produção, sem `MAIL_DRIVER` o cadastro responde 502 em vez de registrar o código em log.
+
+## Chat após um match
+
+- Cada conversa corresponde a um registro real da tabela `matches`, criado quando há curtidas recíprocas.
+- As rotas autenticadas ficam sob `/api/chat`: listar conversas, carregar/enviar mensagens e bloquear/desbloquear outro tutor. Só os tutores dos pets do match podem acessar a conversa.
+- As migrations `20261117031900-create-mensagem.js` e `20261117031901-create-bloqueio-chat.js` criam as tabelas `mensagens` e `bloqueios_chat`. Execute `npm run db:migrate` na pasta `backend`, somente depois de confirmar o ambiente do banco e resolver migrations anteriores pendentes.
+- Para criptografar mensagens em repouso, configure `CHAT_CHAVE_CRIPTOGRAFIA` no ambiente do backend (64 caracteres hexadecimais). Gere uma chave com `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` e guarde-a fora do código; trocar ou perder a chave impede a leitura das mensagens já cifradas.
+- O chat atualiza mensagens por consulta periódica, sem WebSocket.
+- Os testes sem banco podem ser executados com `npm run test:chat`.
