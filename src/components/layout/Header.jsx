@@ -15,6 +15,7 @@ export default function Header() {
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const emPerfilDeFarejar = location.pathname.startsWith("/perfil-pet/");
+  const emConversa = location.pathname.startsWith("/chat/");
 
   function confirmarLogout() {
     logout();
@@ -68,6 +69,17 @@ export default function Header() {
         >
           Meu pet
         </NavLink>
+
+        {user && (
+          <NavLink
+            to="/conversas"
+            className={({ isActive }) =>
+              isActive || emConversa ? "nav-item active" : "nav-item"
+            }
+          >
+            Conversas
+          </NavLink>
+        )}
       </nav>
 
       <div className="header-user">
