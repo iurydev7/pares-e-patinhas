@@ -22,6 +22,14 @@ function serializarAnimal(animal) {
   };
 }
 
+function normalizarEspecie(especie) {
+  return String(especie || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
 async function listarAnimais({
   tutorId,
   animalId,
@@ -67,6 +75,24 @@ async function listarAnimais({
     throw criarErro(409, "Este animal não está disponível para farejar.");
   }
 
+  const especieOrigem = normalizarEspecie(animalOrigem.especie);
+  const especiesPermitidas = ["cachorro", "gato", "outro"];
+
+  if (!especiesPermitidas.includes(especieOrigem)) {
+    throw criarErro(409, "A espécie do animal selecionado é inválida.");
+  }
+
+  if (
+    especie !== undefined &&
+    especie !== "" &&
+    normalizarEspecie(especie) !== especieOrigem
+  ) {
+    throw criarErro(
+      400,
+      "A espécie informada deve ser a mesma do animal selecionado.",
+    );
+  }
+
   const interacoesAnteriores = await Interacao.findAll({
     attributes: ["animal_alvo_id"],
     where: {
@@ -93,20 +119,7 @@ async function listarAnimais({
     disponivel: true,
   };
 
-  if (especie !== undefined && especie !== "") {
-    const especiesPermitidas = {
-      cachorro: "Cachorro",
-      gato: "Gato",
-    };
-
-    const especieNormalizada = String(especie).trim().toLowerCase();
-
-    if (!especiesPermitidas[especieNormalizada]) {
-      throw criarErro(400, "Espécie inválida.");
-    }
-
-    filtros.especie = especiesPermitidas[especieNormalizada];
-  }
+  filtros.especie = animalOrigem.especie;
 
   if (sexo !== undefined && sexo !== "") {
     const sexosPermitidos = {

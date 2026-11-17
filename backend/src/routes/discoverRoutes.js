@@ -30,7 +30,7 @@ const router = Router();
  *         name: especie
  *         schema:
  *           type: string
- *         description: Filtrar por cachorro ou gato.
+ *         description: Deve corresponder à espécie do animal selecionado.
  *       - in: query
  *         name: sexo
  *         schema:
