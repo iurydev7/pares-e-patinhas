@@ -1,16 +1,13 @@
+"use strict";
 
-'use strict';
-
-const {
-  Model
-} = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Animal extends Model {
     static associate(db) {
       Animal.belongsTo(db.Tutor, {
-        foreignKey: 'tutorId',
-        as: 'tutor',
+        foreignKey: "tutorId",
+        as: "tutor",
       });
       Animal.hasMany(db.FotoAnimal, {
         foreignKey: 'animal_id',
@@ -73,6 +70,18 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
 
+      ativo: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+
+      disponivel: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      },
+
       tutorId: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -80,9 +89,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Animal',
-      tableName: 'animals',
-    }
+      modelName: "Animal",
+      tableName: "animals",
+    },
   );
 
   return Animal;
