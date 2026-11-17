@@ -27,10 +27,12 @@ function carregarDadosTutor(user) {
     estado: user?.estado || "",
 
     foto:
-      String(user?.id) === "1" &&
-      user?.email?.toLowerCase() === "carlinhos.jesus@gmail.com"
-        ? "/uploads/tutores/Carlinhos-jesus.png"
-        : user?.foto || "",
+      typeof user?.foto === "string"
+        ? user.foto
+        : String(user?.id) === "1" &&
+            user?.email?.toLowerCase() === "carlinhos.jesus@gmail.com"
+          ? "/uploads/tutores/Carlinhos-jesus.png"
+          : "",
   };
 
   try {
@@ -46,7 +48,11 @@ function carregarDadosTutor(user) {
           cidade: dados.cidade ?? dadosIniciais.cidade,
           estado: dados.estado ?? dadosIniciais.estado,
           foto:
-            typeof dados.foto === "string" ? dados.foto : dadosIniciais.foto,
+            user?.foto
+              ? user.foto
+              : typeof dados.foto === "string"
+                ? dados.foto
+                : dadosIniciais.foto,
         };
       }
     }
@@ -147,9 +153,9 @@ function PerfilPet({ pet, pets, petAtivo, excluirPet, user }) {
     }
   }
 
-  function excluirPerfil() {
+  async function excluirPerfil() {
     try {
-      excluirPet(pet.id);
+      await excluirPet(pet.id);
       navigate("/minha-conta", { replace: true });
     } catch (falha) {
       setErro(
@@ -461,7 +467,7 @@ function PerfilPet({ pet, pets, petAtivo, excluirPet, user }) {
                 </p>
 
                 <p className="text-danger small">
-                  Os dados deste pet serão removidos do navegador. Esta ação não
+                  Os dados deste pet serão removidos da sua conta. Esta ação não
                   poderá ser desfeita.
                 </p>
 
@@ -500,11 +506,25 @@ function PerfilPet({ pet, pets, petAtivo, excluirPet, user }) {
 function MeuPet() {
   const { petId } = useParams();
   const { user } = useAuth();
-  const { pets, petAtivo, excluirPet } = usePetAtivo();
+  const {
+    pets,
+    petAtivo,
+    carregandoPets,
+    erroCarregamentoPets,
+    excluirPet,
+  } = usePetAtivo();
 
   const pet = petId
     ? pets.find((item) => String(item.id) === String(petId))
     : petAtivo;
+
+  if (carregandoPets) {
+    return (
+      <main className="container py-5 text-center" role="status">
+        Carregando os pets da sua conta...
+      </main>
+    );
+  }
 
   if (!pet) {
     return (
@@ -514,7 +534,8 @@ function MeuPet() {
         </h1>
 
         <p className="text-muted">
-          Acesse Minha Conta para visualizar ou selecionar um pet.
+          {erroCarregamentoPets ||
+            "Acesse Minha Conta para visualizar ou selecionar um pet."}
         </p>
 
         <Link to="/minha-conta" className="btn btn-primary">

@@ -64,6 +64,7 @@ async function autenticarTutor({ email, senha }) {
       id: tutor.id,
       nome: tutor.nome,
       email: tutor.email,
+      foto: tutor.foto || "",
     },
   };
 }

@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'tutorId',
         as: 'tutor',
       });
+      Animal.hasMany(db.FotoAnimal, {
+        foreignKey: 'animal_id',
+        as: 'fotos',
+      });
     }
   }
 

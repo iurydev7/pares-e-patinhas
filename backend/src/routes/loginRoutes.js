@@ -1,7 +1,7 @@
 const { Router } = require("express");
 
 const { login } = require("../controllers/loginController");
-const { me } = require("../controllers/meController");
+const { me, atualizarFoto } = require("../controllers/meController");
 const { register } = require("../controllers/registerController");
 const {
   verifyEmail,
@@ -200,6 +200,35 @@ router.post("/login", login);
  *         description: Erro interno do servidor.
  */
 router.get("/me", authMiddleware, me);
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   patch:
+ *     summary: Atualizar a foto do tutor autenticado
+ *     tags: [Autenticação]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [foto]
+ *             properties:
+ *               foto:
+ *                 type: string
+ *                 description: Data URL de imagem JPG, PNG ou WebP; string vazia remove a foto.
+ *     responses:
+ *       200:
+ *         description: Foto atualizada.
+ *       400:
+ *         description: Imagem inválida.
+ *       401:
+ *         description: Autenticação necessária.
+ */
+router.patch("/me", authMiddleware, atualizarFoto);
 
 
 module.exports = router;

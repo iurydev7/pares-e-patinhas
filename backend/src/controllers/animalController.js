@@ -1,5 +1,41 @@
-const { Animal } = require('../../models');
-const animalService = require("../services/animalService");
+const { Animal, FotoAnimal, sequelize } = require("../../models");
+const { validarListaImagens } = require("../utils/validarImagem");
+
+const incluirFotos = {
+    model: FotoAnimal,
+    as: "fotos",
+    attributes: ["url", "ordem"],
+};
+
+function serializarAnimal(animal) {
+    const dados = animal.toJSON();
+    const fotos = (dados.fotos || [])
+        .slice()
+        .sort((a, b) => a.ordem - b.ordem)
+        .map((foto) => foto.url);
+
+    return {
+        ...dados,
+        fotos,
+        foto: fotos[0] || "",
+    };
+}
+
+async function salvarFotosAnimal(animalId, fotos, transaction) {
+    if (fotos === undefined) return;
+
+    await FotoAnimal.destroy({
+        where: { animal_id: animalId },
+        transaction,
+    });
+
+    if (fotos.length > 0) {
+        await FotoAnimal.bulkCreate(
+            fotos.map((url, ordem) => ({ animal_id: animalId, url, ordem })),
+            { transaction },
+        );
+    }
+}
 
 const cadastrarAnimal = async (req, res, next) => {
     try {
@@ -16,24 +52,52 @@ const cadastrarAnimal = async (req, res, next) => {
             estado,
         } = req.body;
 
-        const novoAnimal = await Animal.create({
-            nome,
-            especie,
-            sexo,
-            raca,
-            idadeAnos,
-            idadeMeses,
-            porte,
-            descricao,
-            cidade,
-            estado,
-            tutorId: req.auth.tutorId,
+        const fotos = validarListaImagens(req.body.fotos ?? []);
+        const novoAnimal = await sequelize.transaction(async (transaction) => {
+            const animal = await Animal.create({
+                nome,
+                especie,
+                sexo,
+                raca,
+                idadeAnos,
+                idadeMeses,
+                porte,
+                descricao,
+                cidade,
+                estado,
+                tutorId: req.auth.tutorId,
+            }, { transaction });
+
+            await salvarFotosAnimal(animal.id, fotos, transaction);
+
+            return Animal.findByPk(animal.id, {
+                include: [incluirFotos],
+                transaction,
+            });
         });
 
-        return res.status(201).json(animal);
+        return res.status(201).json(serializarAnimal(novoAnimal));
 
     } catch (erro) {
         return next(erro);
+    }
+};
+
+const listarAnimaisDoTutor = async (req, res, next) => {
+    try {
+        const animais = await Animal.findAll({
+            where: { tutorId: req.auth.tutorId },
+            include: [incluirFotos],
+            order: [['createdAt', 'DESC']],
+        });
+
+        res.set('Cache-Control', 'no-store');
+
+        return res.status(200).json({
+            animais: animais.map(serializarAnimal),
+        });
+    } catch (error) {
+        return next(error);
     }
 };
 
@@ -105,7 +169,7 @@ const buscarAnimalPorId = async (req, res) => {
 };
 
 
-const atualizarAnimal = async (req, res) => {
+const atualizarAnimal = async (req, res, next) => {
     try {
         const {
             nome,
@@ -120,44 +184,54 @@ const atualizarAnimal = async (req, res) => {
             estado,
         } = req.body;
 
-        const [atualizado] = await Animal.update({
-            nome,
-            especie,
-            sexo,
-            raca,
-            idadeAnos,
-            idadeMeses,
-            porte,
-            descricao,
-            cidade,
-            estado,
-        }, {
-            where: {
-                id: req.params.id,
-                tutorId: req.auth.tutorId,
-            },
+        const fotos =
+            req.body?.fotos === undefined
+                ? undefined
+                : validarListaImagens(req.body.fotos);
+        const animal = await sequelize.transaction(async (transaction) => {
+            const [atualizado] = await Animal.update({
+                nome,
+                especie,
+                sexo,
+                raca,
+                idadeAnos,
+                idadeMeses,
+                porte,
+                descricao,
+                cidade,
+                estado,
+            }, {
+                where: {
+                    id: req.params.id,
+                    tutorId: req.auth.tutorId,
+                },
+                transaction,
+            });
+
+            if (!atualizado) return null;
+
+            await salvarFotosAnimal(req.params.id, fotos, transaction);
+
+            return Animal.findOne({
+                where: {
+                    id: req.params.id,
+                    tutorId: req.auth.tutorId,
+                },
+                include: [incluirFotos],
+                transaction,
+            });
         });
 
-        if (!atualizado) {
+        if (!animal) {
             return res.status(404).json({
                 mensagem: 'Animal não encontrado',
             });
         }
 
-        const animal = await Animal.findOne({
-            where: {
-                id: req.params.id,
-                tutorId: req.auth.tutorId,
-            },
-        });
-
-        return res.status(200).json(animal);
+        return res.status(200).json(serializarAnimal(animal));
 
     } catch (error) {
-        return res.status(500).json({
-            mensagem: 'Erro ao atualizar animal',
-            erro: error.message,
-        });
+        return next(error);
     }
 };
 
@@ -191,6 +265,7 @@ const excluirAnimal = async (req, res) => {
 
 module.exports = {
   cadastrarAnimal,
+  listarAnimaisDoTutor,
   listarAnimais,
   buscarAnimalPorId,
   atualizarAnimal,

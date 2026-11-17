@@ -97,6 +97,8 @@ function FormularioPet({
   petId,
   petOriginal,
   usuarioId,
+  carregandoPets,
+  erroCarregamentoPets,
   adicionarPet,
   atualizarPet,
 }) {
@@ -257,6 +259,7 @@ function FormularioPet({
         descricao: dadosPet.descricao || null,
         cidade: dadosPet.cidade || null,
         estado: dadosPet.estado || null,
+        fotos: imagensOrdenadas,
       };
 
       if (emEdicao) {
@@ -313,7 +316,21 @@ function FormularioPet({
             </p>
           </div>
 
-          {emEdicao && !petOriginal ? (
+          {carregandoPets ? (
+            <div className="formulario-pet" role="status">
+              Carregando os dados do pet...
+            </div>
+          ) : emEdicao && erroCarregamentoPets ? (
+            <div className="formulario-pet">
+              <p className="text-danger" role="alert">
+                Não foi possível carregar os dados do pet:{" "}
+                {erroCarregamentoPets}
+              </p>
+              <Link to="/minha-conta" className="btn btn-outline-secondary">
+                Voltar para Meus Pets
+              </Link>
+            </div>
+          ) : emEdicao && !petOriginal ? (
             <div className="formulario-pet">
               <h2 className="h5">Pet não encontrado</h2>
 
@@ -756,7 +773,13 @@ function CadastroPet() {
   const { petId } = useParams();
 
   const { user } = useAuth();
-  const { pets, adicionarPet, atualizarPet } = usePetAtivo();
+  const {
+    pets,
+    carregandoPets,
+    erroCarregamentoPets,
+    adicionarPet,
+    atualizarPet,
+  } = usePetAtivo();
 
   const petOriginal = petId
     ? pets.find((pet) => String(pet.id) === String(petId))
@@ -768,6 +791,8 @@ function CadastroPet() {
       petId={petId}
       petOriginal={petOriginal}
       usuarioId={user?.id}
+      carregandoPets={carregandoPets}
+      erroCarregamentoPets={erroCarregamentoPets}
       adicionarPet={adicionarPet}
       atualizarPet={atualizarPet}
     />
