@@ -1,4 +1,4 @@
-const { Animal, Interacao, Sequelize } = require("../../models");
+const { Animal, FotoAnimal, Interacao, Sequelize } = require("../../models");
 
 const { Op } = Sequelize;
 
@@ -6,6 +6,20 @@ function criarErro(status, mensagem) {
   const erro = new Error(mensagem);
   erro.statusCode = status;
   return erro;
+}
+
+function serializarAnimal(animal) {
+  const dados = animal.toJSON();
+  const fotos = (dados.fotos || [])
+    .slice()
+    .sort((a, b) => a.ordem - b.ordem)
+    .map((foto) => foto.url);
+
+  return {
+    ...dados,
+    fotos,
+    foto: fotos[0] || "",
+  };
 }
 
 async function listarAnimais({
@@ -147,10 +161,19 @@ async function listarAnimais({
       "cidade",
       "estado",
     ],
+    include: [
+      {
+        model: FotoAnimal,
+        as: "fotos",
+        attributes: ["url", "ordem"],
+        required: false,
+      },
+    ],
     where: filtros,
     limit: limite,
     offset: (pagina - 1) * limite,
     order: [["id", "ASC"]],
+    distinct: true,
   });
 
   return {
@@ -158,7 +181,7 @@ async function listarAnimais({
     pagina,
     limite,
     totalPaginas: Math.ceil(resultado.count / limite),
-    animais: resultado.rows,
+    animais: resultado.rows.map(serializarAnimal),
   };
 }
 

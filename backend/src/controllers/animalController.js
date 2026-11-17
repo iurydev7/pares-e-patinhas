@@ -130,7 +130,9 @@ const listarAnimais = async (req, res) => {
 
 const buscarAnimalPorId = async (req, res) => {
     try {
-        const animal = await Animal.findByPk(req.params.id);
+        const animal = await Animal.findByPk(req.params.id, {
+            include: [incluirFotos],
+        });
 
         if (!animal) {
             return res.status(404).json({
@@ -138,7 +140,7 @@ const buscarAnimalPorId = async (req, res) => {
             });
         }
 
-        return res.status(200).json(animal);
+        return res.status(200).json(serializarAnimal(animal));
 
     } catch (error) {
         return res.status(500).json({

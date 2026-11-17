@@ -2,18 +2,20 @@
 
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.sequelize.query(`
-      CREATE UNIQUE INDEX unique_match_entre_animais
-      ON matches (
-        (LEAST(animal_1_id, animal_2_id)),
-        (GREATEST(animal_1_id, animal_2_id))
-      )
-    `);
+    await queryInterface.addIndex(
+      "matches",
+      ["animal_1_id", "animal_2_id"],
+      {
+        unique: true,
+        name: "unique_match_entre_animais",
+      }
+    );
   },
 
   async down(queryInterface) {
-    await queryInterface.sequelize.query(`
-      DROP INDEX unique_match_entre_animais ON matches
-    `);
+    await queryInterface.removeIndex(
+      "matches",
+      "unique_match_entre_animais"
+    );
   },
 };
