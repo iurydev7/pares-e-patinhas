@@ -9,8 +9,6 @@ import {
 } from "../services/farejarService";
 import "./Farejar.css";
 
-const chatFuncionando = false;
-
 function Farejar() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,7 +27,6 @@ function Farejar() {
       ? { ...location.state.match, matchId: location.state.matchId }
       : null,
   );
-  const [avisoChat, setAvisoChat] = useState(false);
 
   useEffect(() => {
     let ativo = true;
@@ -159,11 +156,6 @@ function Farejar() {
   }
 
   function abrirChat() {
-    if (!chatFuncionando) {
-      setAvisoChat(true);
-      return;
-    }
-
     if (!match?.matchId) return;
 
     navigate(`/chat/${match.matchId}`);
@@ -171,7 +163,6 @@ function Farejar() {
 
   function fecharMatch() {
     setMatch(null);
-    setAvisoChat(false);
   }
 
   const descobertaAtual =
@@ -250,12 +241,6 @@ function Farejar() {
             {match.imagem && <img src={match.imagem} alt={match.nome} />}
 
             <p>Você e {match.nome} se curtiram.</p>
-
-            {avisoChat && (
-              <div className="alert alert-warning" role="alert">
-                Em breve
-              </div>
-            )}
 
             <div className="match-acoes">
               <button type="button" className="match-botao" onClick={abrirChat}>
