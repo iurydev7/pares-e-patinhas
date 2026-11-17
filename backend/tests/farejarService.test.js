@@ -9,9 +9,7 @@ jest.mock("../models", () => ({
   Interacao: {
     findAll: jest.fn(),
   },
-  Sequelize: {
-    Op: require("sequelize").Op,
-  },
+  Sequelize: require("sequelize"),
 }));
 
 const { Animal, Interacao, Sequelize } = require("../models");
@@ -64,8 +62,12 @@ describe("Serviço de descoberta de pets", () => {
     const filtros = Animal.findAndCountAll.mock.calls[0][0];
     expect(filtros.where.id[Sequelize.Op.notIn]).toEqual([1, 3]);
     expect(filtros.where.tutorId[Sequelize.Op.ne]).toBe(7);
-    expect(filtros.where.especie).toBe("Cachorro");
+    const filtroEspecie = filtros.where[Sequelize.Op.and][0];
+    expect(filtroEspecie.attribute.fn).toBe("LOWER");
+    expect(filtroEspecie.attribute.args[0].col).toBe("especie");
+    expect(filtroEspecie.logic).toBe("cachorro");
     expect(filtros.include[0].as).toBe("fotos");
+    expect(filtros.order).toEqual([["id", "DESC"]]);
     expect(filtros.distinct).toBe(true);
   });
 
