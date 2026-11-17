@@ -22,8 +22,8 @@ function serializarAnimal(animal) {
   };
 }
 
-function normalizarEspecie(especie) {
-  return String(especie || "")
+function normalizarValor(valor) {
+  return String(valor || "")
     .trim()
     .toLowerCase()
     .normalize("NFD")
@@ -75,21 +75,37 @@ async function listarAnimais({
     throw criarErro(409, "Este animal não está disponível para farejar.");
   }
 
-  const especieOrigem = normalizarEspecie(animalOrigem.especie);
+  const especieOrigem = normalizarValor(animalOrigem.especie);
   const especiesPermitidas = ["cachorro", "gato", "outro"];
 
   if (!especiesPermitidas.includes(especieOrigem)) {
     throw criarErro(409, "A espécie do animal selecionado é inválida.");
   }
 
+  const sexoOrigem = normalizarValor(animalOrigem.sexo);
+  const sexosPermitidos = ["macho", "femea"];
+
+  if (!sexosPermitidos.includes(sexoOrigem)) {
+    throw criarErro(409, "O sexo do animal selecionado é inválido.");
+  }
+
+  const sexoAlvo = sexoOrigem === "macho" ? "femea" : "macho";
+
   if (
     especie !== undefined &&
     especie !== "" &&
-    normalizarEspecie(especie) !== especieOrigem
+    normalizarValor(especie) !== especieOrigem
   ) {
     throw criarErro(
       400,
       "A espécie informada deve ser a mesma do animal selecionado.",
+    );
+  }
+
+  if (sexo !== undefined && sexo !== "" && normalizarValor(sexo) !== sexoAlvo) {
+    throw criarErro(
+      400,
+      "O sexo informado deve ser o oposto ao do animal selecionado.",
     );
   }
 
@@ -114,6 +130,15 @@ async function listarAnimais({
         Sequelize.fn("LOWER", Sequelize.col("especie")),
         especieOrigem,
       ),
+      Sequelize.where(
+        Sequelize.fn(
+          "REPLACE",
+          Sequelize.fn("LOWER", Sequelize.col("sexo")),
+          "ê",
+          "e",
+        ),
+        sexoAlvo,
+      ),
     ],
     id: {
       [Op.notIn]: idsExcluidos,
@@ -124,25 +149,6 @@ async function listarAnimais({
     ativo: true,
     disponivel: true,
   };
-
-  if (sexo !== undefined && sexo !== "") {
-    const sexosPermitidos = {
-      macho: "Macho",
-      femea: "Fêmea",
-      fêmea: "Fêmea",
-      todos: null,
-    };
-
-    const sexoNormalizado = String(sexo).trim().toLowerCase();
-
-    if (!(sexoNormalizado in sexosPermitidos)) {
-      throw criarErro(400, "Sexo inválido.");
-    }
-
-    if (sexosPermitidos[sexoNormalizado]) {
-      filtros.sexo = sexosPermitidos[sexoNormalizado];
-    }
-  }
 
   if (cidade !== undefined && cidade !== "") {
     const cidadeNormalizada = String(cidade).trim();

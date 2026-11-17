@@ -35,8 +35,8 @@ const router = Router();
  *         name: sexo
  *         schema:
  *           type: string
- *           enum: [macho, femea, todos]
- *         description: Filtrar por sexo.
+ *           enum: [macho, femea]
+ *         description: Deve corresponder ao sexo oposto do animal selecionado.
  *       - in: query
  *         name: cidade
  *         schema:

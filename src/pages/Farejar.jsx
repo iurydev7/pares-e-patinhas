@@ -188,7 +188,7 @@ function Farejar() {
       <h1 className="farejar-titulo">Farejar</h1>
 
       <p className="farejar-subtitulo">
-        Um pet por vez. Dê uma patinha para quem você gostou.
+        Dê uma patinha para quem você gostou.
       </p>
 
       {erro && (

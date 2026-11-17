@@ -22,6 +22,7 @@ describe("Serviço de descoberta de pets", () => {
       id: 1,
       tutorId: 7,
       especie: "Cachorro",
+      sexo: "Macho",
       ativo: true,
       disponivel: true,
     });
@@ -66,6 +67,11 @@ describe("Serviço de descoberta de pets", () => {
     expect(filtroEspecie.attribute.fn).toBe("LOWER");
     expect(filtroEspecie.attribute.args[0].col).toBe("especie");
     expect(filtroEspecie.logic).toBe("cachorro");
+    const filtroSexo = filtros.where[Sequelize.Op.and][1];
+    expect(filtroSexo.attribute.fn).toBe("REPLACE");
+    expect(filtroSexo.attribute.args[0].fn).toBe("LOWER");
+    expect(filtroSexo.attribute.args[0].args[0].col).toBe("sexo");
+    expect(filtroSexo.logic).toBe("femea");
     expect(filtros.include[0].as).toBe("fotos");
     expect(filtros.order).toEqual([["id", "DESC"]]);
     expect(filtros.distinct).toBe(true);
@@ -81,6 +87,54 @@ describe("Serviço de descoberta de pets", () => {
     ).rejects.toMatchObject({
       statusCode: 400,
       message: "A espécie informada deve ser a mesma do animal selecionado.",
+    });
+
+    expect(Animal.findAndCountAll).not.toHaveBeenCalled();
+  });
+
+  it("filtra fêmeas para uma origem macho mesmo com variação de maiúsculas", async () => {
+    await listarAnimais({
+      tutorId: 7,
+      animalId: 1,
+    });
+
+    const filtros = Animal.findAndCountAll.mock.calls[0][0];
+    const filtroSexo = filtros.where[Sequelize.Op.and][1];
+
+    expect(filtroSexo.logic).toBe("femea");
+  });
+
+  it("filtra machos para uma origem fêmea", async () => {
+    Animal.findByPk.mockResolvedValue({
+      id: 1,
+      tutorId: 7,
+      especie: "Cachorro",
+      sexo: "Fêmea",
+      ativo: true,
+      disponivel: true,
+    });
+
+    await listarAnimais({
+      tutorId: 7,
+      animalId: 1,
+    });
+
+    const filtros = Animal.findAndCountAll.mock.calls[0][0];
+    const filtroSexo = filtros.where[Sequelize.Op.and][1];
+
+    expect(filtroSexo.logic).toBe("macho");
+  });
+
+  it("não permite solicitar pets do mesmo sexo do animal selecionado", async () => {
+    await expect(
+      listarAnimais({
+        tutorId: 7,
+        animalId: 1,
+        sexo: "macho",
+      }),
+    ).rejects.toMatchObject({
+      statusCode: 400,
+      message: "O sexo informado deve ser o oposto ao do animal selecionado.",
     });
 
     expect(Animal.findAndCountAll).not.toHaveBeenCalled();
